@@ -18,19 +18,19 @@ class UserControllerTest {
     @LocalServerPort
     private int port;
 
-    private static String requestBody = """
+    private static String requestBody =String.format( """
             {
               "firstName": "fname",
               "lastName": "lname",
               "eMail": "string@qd.com",
               "street": "string",
               "houseNumber": "string",
-              "postCode": "3500",
+              "postCode": %s,
               "city": "Hasselt",
               "phoneNumber": "04653122246",
               "password": "password"
             }
-            """;
+            ""","3500");
     @Test
     void addCustomer() {
         CustomerDto response= given()

@@ -1,9 +1,9 @@
 package com.switchfully.eurder.service;
 
-import com.switchfully.eurder.domain.Feature;
-import com.switchfully.eurder.domain.User;
+import com.switchfully.eurder.domain.users.Feature;
+import com.switchfully.eurder.domain.users.User;
 import com.switchfully.eurder.repositories.UserRepository;
-import com.switchfully.eurder.domain.UsernamePassword;
+import com.switchfully.eurder.domain.users.UsernamePassword;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

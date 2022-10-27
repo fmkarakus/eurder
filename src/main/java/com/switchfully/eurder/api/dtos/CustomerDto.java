@@ -1,7 +1,7 @@
 package com.switchfully.eurder.api.dtos;
 
-import com.switchfully.eurder.domain.Address;
-import com.switchfully.eurder.domain.Role;
+import com.switchfully.eurder.domain.users.Address;
+import com.switchfully.eurder.domain.users.Role;
 
 public class CustomerDto {
     private String id;

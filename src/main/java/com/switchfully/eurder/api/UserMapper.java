@@ -2,8 +2,8 @@ package com.switchfully.eurder.api;
 
 import com.switchfully.eurder.api.dtos.CreateCustomerDto;
 import com.switchfully.eurder.api.dtos.CustomerDto;
-import com.switchfully.eurder.domain.Address;
-import com.switchfully.eurder.domain.User;
+import com.switchfully.eurder.domain.users.Address;
+import com.switchfully.eurder.domain.users.User;
 import org.springframework.stereotype.Component;
 
 @Component

@@ -1,14 +1,13 @@
 package com.switchfully.eurder.repositories;
 
-import com.switchfully.eurder.domain.Address;
-import com.switchfully.eurder.domain.Role;
-import com.switchfully.eurder.domain.User;
+import com.switchfully.eurder.api.dtos.CustomerDto;
+import com.switchfully.eurder.domain.users.Address;
+import com.switchfully.eurder.domain.users.Role;
+import com.switchfully.eurder.domain.users.User;
 import org.springframework.stereotype.Repository;
 
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 public class UserRepository {
@@ -35,5 +34,9 @@ public class UserRepository {
     public User addCustomer(User user) {
         userMap.put(user.getId(), user);
         return user;
+    }
+
+    public Collection<User> getAllUsers() {
+        return userMap.values();
     }
 }

@@ -3,10 +3,13 @@ package com.switchfully.eurder.service;
 import com.switchfully.eurder.api.dtos.CreateItemDto;
 import com.switchfully.eurder.api.dtos.ItemDto;
 import com.switchfully.eurder.api.ItemMapper;
-import com.switchfully.eurder.domain.Feature;
+import com.switchfully.eurder.domain.users.Feature;
 import com.switchfully.eurder.domain.Item;
 import com.switchfully.eurder.repositories.ItemRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class ItemService {
@@ -25,5 +28,12 @@ public class ItemService {
         securityService.validateAuthorization(authorization, Feature.ADD_NEW_ITEM);
         Item item=itemRepository.addNewItem(itemMapper.mapToItem(newItem));
         return itemMapper.mapToItemDto(item);
+    }
+
+    public List<ItemDto> getAllItems(String authorization) {
+        securityService.validateAuthorization(authorization, Feature.GET_ALL_ITEMS);
+        List<ItemDto> items=new ArrayList<>();
+        itemRepository.getItemMap().values().forEach(item->items.add(itemMapper.mapToItemDto(item)));
+        return items;
     }
 }
