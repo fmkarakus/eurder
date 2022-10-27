@@ -2,7 +2,7 @@ package com.switchfully.eurder.service;
 
 import com.switchfully.eurder.domain.Feature;
 import com.switchfully.eurder.domain.User;
-import com.switchfully.eurder.domain.UserRepository;
+import com.switchfully.eurder.repositories.UserRepository;
 import com.switchfully.eurder.domain.UsernamePassword;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

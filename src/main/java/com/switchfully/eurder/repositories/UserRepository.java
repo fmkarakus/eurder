@@ -1,5 +1,8 @@
-package com.switchfully.eurder.domain;
+package com.switchfully.eurder.repositories;
 
+import com.switchfully.eurder.domain.Address;
+import com.switchfully.eurder.domain.Role;
+import com.switchfully.eurder.domain.User;
 import org.springframework.stereotype.Repository;
 
 

@@ -1,11 +1,11 @@
 package com.switchfully.eurder.service;
 
-import com.switchfully.eurder.api.CreateItemDto;
-import com.switchfully.eurder.api.ItemDto;
+import com.switchfully.eurder.api.dtos.CreateItemDto;
+import com.switchfully.eurder.api.dtos.ItemDto;
 import com.switchfully.eurder.api.ItemMapper;
 import com.switchfully.eurder.domain.Feature;
 import com.switchfully.eurder.domain.Item;
-import com.switchfully.eurder.domain.ItemRepository;
+import com.switchfully.eurder.repositories.ItemRepository;
 import org.springframework.stereotype.Service;
 
 @Service

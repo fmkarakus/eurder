@@ -1,4 +1,4 @@
-package com.switchfully.eurder.api;
+package com.switchfully.eurder.api.dtos;
 
 import java.util.UUID;
 

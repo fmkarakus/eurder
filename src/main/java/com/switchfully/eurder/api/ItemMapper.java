@@ -1,5 +1,7 @@
 package com.switchfully.eurder.api;
 
+import com.switchfully.eurder.api.dtos.CreateItemDto;
+import com.switchfully.eurder.api.dtos.ItemDto;
 import com.switchfully.eurder.domain.Item;
 import org.springframework.stereotype.Component;
 
