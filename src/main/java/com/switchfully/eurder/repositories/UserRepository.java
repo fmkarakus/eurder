@@ -31,4 +31,9 @@ public class UserRepository {
     public Optional<User> getPersonbyEmail(String username) {
         return userMap.values().stream().filter(user -> user.geteMail().equals(username)).findFirst();
     }
+
+    public User addCustomer(User user) {
+        userMap.put(user.getId(), user);
+        return user;
+    }
 }

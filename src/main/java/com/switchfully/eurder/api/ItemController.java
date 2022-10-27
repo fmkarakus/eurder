@@ -16,7 +16,7 @@ private final ItemService itemService;
         this.itemService = itemService;
     }
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public ItemDto addNewItem(@RequestHeader String authorization, @RequestBody CreateItemDto newItem){
       return  itemService.addNewItem(authorization,newItem);
