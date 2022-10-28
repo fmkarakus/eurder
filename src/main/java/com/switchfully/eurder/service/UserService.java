@@ -9,6 +9,7 @@ import com.switchfully.eurder.api.dtos.ShowOrderDto;
 import com.switchfully.eurder.domain.Order;
 import com.switchfully.eurder.domain.users.Feature;
 import com.switchfully.eurder.domain.users.User;
+import com.switchfully.eurder.repositories.OrderRepository;
 import com.switchfully.eurder.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -22,12 +23,14 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final OrderMapper orderMapper;
+    private final OrderRepository orderRepository;
 
-    public UserService(SecurityService securityService, UserRepository userRepository, UserMapper userMapper, OrderMapper orderMapper) {
+    public UserService(SecurityService securityService, UserRepository userRepository, UserMapper userMapper, OrderMapper orderMapper, OrderRepository orderRepository) {
         this.securityService = securityService;
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.orderMapper = orderMapper;
+        this.orderRepository = orderRepository;
     }
 
     public CustomerDto addCustomer(CreateCustomerDto newCustomer) {
@@ -41,6 +44,7 @@ public class UserService {
         securityService.validateAuthorization(authorization, Feature.ORDER);
         Order newOrder = new Order(userId);
         Arrays.stream(newOrders).forEach(itemGroupDto -> newOrder.addToItemGroupList(orderMapper.mapToItemGroup(itemGroupDto)));
+        orderRepository.addNewOrder(newOrder);
         return orderMapper.mapToShowOrderDto(newOrder);
     }
 

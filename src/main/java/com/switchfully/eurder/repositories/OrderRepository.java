@@ -1,14 +1,15 @@
 package com.switchfully.eurder.repositories;
 
 import com.switchfully.eurder.domain.Order;
+import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
 import java.util.Map;
-
-public class OrderRepoitory {
+@Repository
+public class OrderRepository {
     private final Map<String, Order> orderMap;
 
-    public OrderRepoitory() {
+    public OrderRepository() {
         this.orderMap = new HashMap<>();
     }
 
