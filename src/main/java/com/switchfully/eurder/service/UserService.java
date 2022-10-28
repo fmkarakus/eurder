@@ -2,10 +2,7 @@ package com.switchfully.eurder.service;
 
 import com.switchfully.eurder.api.OrderMapper;
 import com.switchfully.eurder.api.UserMapper;
-import com.switchfully.eurder.api.dtos.CreateCustomerDto;
-import com.switchfully.eurder.api.dtos.CreateItemGroupDto;
-import com.switchfully.eurder.api.dtos.CustomerDto;
-import com.switchfully.eurder.api.dtos.ShowOrderDto;
+import com.switchfully.eurder.api.dtos.*;
 import com.switchfully.eurder.domain.Order;
 import com.switchfully.eurder.domain.users.Feature;
 import com.switchfully.eurder.domain.users.User;
@@ -53,5 +50,10 @@ public class UserService {
         return userRepository.getAllUsers().stream()
                 .map(userMapper::mapToCustomeDto)
                 .collect(Collectors.toList());
+    }
+
+    public ShowUserDto getCustomer(String authorization, String customerId) {
+        securityService.validateAuthorization(authorization, Feature.VIEW_USERS);
+        return userMapper.maptoShowUserDto(userRepository.getUserById(customerId));
     }
 }

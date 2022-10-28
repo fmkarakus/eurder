@@ -1,9 +1,6 @@
 package com.switchfully.eurder.api;
 
-import com.switchfully.eurder.api.dtos.CreateCustomerDto;
-import com.switchfully.eurder.api.dtos.CreateItemGroupDto;
-import com.switchfully.eurder.api.dtos.CustomerDto;
-import com.switchfully.eurder.api.dtos.ShowOrderDto;
+import com.switchfully.eurder.api.dtos.*;
 import com.switchfully.eurder.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -34,7 +31,13 @@ public class UserController {
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public List<CustomerDto> getListOfPersons(@RequestHeader String authorization) {
+    public List<CustomerDto> getAllUsers(@RequestHeader String authorization) {
         return userService.getAllUsers(authorization);
+    }
+
+    @GetMapping(path="{customerId}",produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    public ShowUserDto getCustomer(@RequestHeader String authorization, @PathVariable String customerId) {
+        return userService.getCustomer(authorization,customerId);
     }
 }

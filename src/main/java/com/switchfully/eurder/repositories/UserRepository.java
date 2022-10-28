@@ -39,4 +39,8 @@ public class UserRepository {
     public Collection<User> getAllUsers() {
         return userMap.values();
     }
+
+    public User getUserById(String customerId) {
+        return userMap.get(customerId);
+    }
 }

@@ -76,6 +76,26 @@ class UserControllerTest {
     }
 
     @Test
+    void viewOneCustomer() {
+        String aUserId = userRepository.getPersonbyEmail("customer@test.be").get().getId();
+        given()
+                .baseUri("http://localhost")
+                .port(port)
+                .auth()
+                .preemptive()
+                .basic("admin@eurder.com", "password")
+                .header("Accept", "application/json")
+                .header("Content-type", "application/json")
+                .and()
+                .when()
+                .get("/customers/"+aUserId)
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.OK.value())
+                .extract();
+    }
+
+    @Test
     void addOrder() {
         String aUserId = userRepository.getPersonbyEmail("customer@test.be").get().getId();
         String itemId1 = itemRepository.getItemMap().values().stream().filter(item -> item.getName().equals("item1")).findFirst().get().getId();

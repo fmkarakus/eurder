@@ -42,4 +42,23 @@ class ItemControllerTest {
                 .statusCode(HttpStatus.CREATED.value())
                 .extract();
     }
+
+    @Test
+    void viewAllItems() {
+        given()
+                .baseUri("http://localhost")
+                .port(port)
+                .auth()
+                .preemptive()
+                .basic("admin@eurder.com", "password")
+                .header("Accept", "application/json")
+                .header("Content-type", "application/json")
+                .and()
+                .when()
+                .get("/items")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.OK.value())
+                .extract();
+    }
 }

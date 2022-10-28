@@ -19,7 +19,6 @@ public class ItemService {
 
     public ItemService(SecurityService securityService, ItemRepository itemRepository, ItemMapper itemMapper) {
         this.securityService = securityService;
-
         this.itemRepository = itemRepository;
         this.itemMapper = itemMapper;
     }
