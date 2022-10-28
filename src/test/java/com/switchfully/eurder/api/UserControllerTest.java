@@ -96,6 +96,26 @@ class UserControllerTest {
     }
 
     @Test
+    void viewOneCustomer_whenByCustomer_thenThrowsException() {
+        String aUserId = userRepository.getPersonbyEmail("customer@test.be").get().getId();
+        given()
+                .baseUri("http://localhost")
+                .port(port)
+                .auth()
+                .preemptive()
+                .basic("customer@test.be", "password")
+                .header("Accept", "application/json")
+                .header("Content-type", "application/json")
+                .and()
+                .when()
+                .get("/customers/"+aUserId)
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.FORBIDDEN.value())
+                .extract();
+    }
+
+    @Test
     void addOrder() {
         String aUserId = userRepository.getPersonbyEmail("customer@test.be").get().getId();
         String itemId1 = itemRepository.getItemMap().values().stream().filter(item -> item.getName().equals("item1")).findFirst().get().getId();
@@ -127,6 +147,76 @@ class UserControllerTest {
                 .then()
                 .assertThat()
                 .statusCode(HttpStatus.CREATED.value())
+                .extract();
+    }
+
+    @Test
+    void addOrder_whenUserDoesNotExist_ThrowsException() {
+        String aUserId = "wrongid";
+        String itemId1 = itemRepository.getItemMap().values().stream().filter(item -> item.getName().equals("item1")).findFirst().get().getId();
+        String itemId2 = itemRepository.getItemMap().values().stream().filter(item -> item.getName().equals("item2")).findFirst().get().getId();
+        String requestBody = String.format("""
+                [
+                  {
+                    "itemId": "%s",
+                    "amount": 2
+                  },
+                    {
+                    "itemId": "%s",
+                    "amount": 2
+                  }
+                ]
+                """, itemId1, itemId2);
+        given()
+                .baseUri("http://localhost")
+                .port(port)
+                .auth()
+                .preemptive()
+                .basic("customer@test.be", "password")
+                .header("Accept", "application/json")
+                .header("Content-type", "application/json")
+                .and()
+                .body(requestBody)
+                .when()
+                .post("/customers/" + aUserId + "/order")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .extract();
+    }
+
+    @Test
+    void addOrder_whenItemDoesNotExist_ThrowsException() {
+        String aUserId =userRepository.getPersonbyEmail("customer@test.be").get().getId();;
+        String itemId1 = "wrongid";
+        String itemId2 = itemRepository.getItemMap().values().stream().filter(item -> item.getName().equals("item2")).findFirst().get().getId();
+        String requestBody = String.format("""
+                [
+                  {
+                    "itemId": "%s",
+                    "amount": 2
+                  },
+                    {
+                    "itemId": "%s",
+                    "amount": 2
+                  }
+                ]
+                """, itemId1, itemId2);
+        given()
+                .baseUri("http://localhost")
+                .port(port)
+                .auth()
+                .preemptive()
+                .basic("customer@test.be", "password")
+                .header("Accept", "application/json")
+                .header("Content-type", "application/json")
+                .and()
+                .body(requestBody)
+                .when()
+                .post("/customers/" + aUserId + "/order")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
                 .extract();
     }
 }
