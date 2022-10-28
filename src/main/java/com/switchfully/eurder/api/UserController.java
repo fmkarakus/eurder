@@ -41,4 +41,10 @@ public class UserController {
     public ShowUserDto getCustomer(@RequestHeader String authorization, @PathVariable String customerId) {
         return userService.getCustomer(authorization,customerId);
     }
+
+    @GetMapping(path="{customerId}/orders",produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    public ShowAllOrdersDto getCustomerOrders(@RequestHeader String authorization, @PathVariable String customerId) {
+        return userService.getCustomerOrders(authorization,customerId);
+    }
 }

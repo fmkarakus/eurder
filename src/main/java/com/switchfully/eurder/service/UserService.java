@@ -71,4 +71,12 @@ public class UserService {
     private void assertItemExits(String itemId) {
         if(itemRepository.getItemMap().get(itemId)==null) throw new IllegalArgumentException("Item with the id "+ itemId +" does not exist.");
     }
+
+
+    public ShowAllOrdersDto getCustomerOrders(String authorization, String customerId) {
+        securityService.validateAuthorization(authorization, Feature.ORDER);
+        assertUserExists(customerId);
+        List<Order> allOrdersOfCustomer=orderRepository.getOrdersById(customerId);
+        return orderMapper.mapToShowAllOrders(allOrdersOfCustomer);
+    }
 }

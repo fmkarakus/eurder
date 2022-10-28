@@ -8,6 +8,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
 @Repository
 public class OrderRepository {
     private final Map<String, Order> orderMap;
@@ -23,5 +25,11 @@ public class OrderRepository {
 
     public Collection<Order> getAllOrders() {
         return orderMap.values();
+    }
+
+    public List<Order> getOrdersById(String customerId) {
+        return orderMap.values().stream()
+                .filter(order -> order.getCustomerId().equals(customerId))
+                .collect(Collectors.toList());
     }
 }

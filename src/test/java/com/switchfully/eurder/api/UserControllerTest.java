@@ -237,4 +237,25 @@ class UserControllerTest {
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .extract();
     }
+
+    @Test
+    void getCustomerOrders() {
+        String aUserId = userRepository.getPersonbyEmail("customer@test.be").get().getId();
+
+        given()
+                .baseUri("http://localhost")
+                .port(port)
+                .auth()
+                .preemptive()
+                .basic("customer@test.be", "password")
+                .header("Accept", "application/json")
+                .header("Content-type", "application/json")
+                .and()
+                .when()
+                .get("/customers/" + aUserId + "/orders")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.OK.value())
+                .extract();
+    }
 }

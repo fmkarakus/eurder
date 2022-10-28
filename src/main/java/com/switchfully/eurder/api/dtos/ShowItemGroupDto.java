@@ -6,11 +6,17 @@ public class ShowItemGroupDto {
     private String itemId;
     private int amount;
     private LocalDate shippingDate;
+    private double price;
 
-    public ShowItemGroupDto(String itemId, int amount, LocalDate shippingDate) {
+    public double getPrice() {
+        return price;
+    }
+
+    public ShowItemGroupDto(String itemId, int amount, LocalDate shippingDate, double price) {
         this.itemId = itemId;
         this.amount = amount;
         this.shippingDate = shippingDate;
+        this.price = price;
     }
 
     public String getItemId() {

@@ -1,6 +1,7 @@
 package com.switchfully.eurder.api;
 
 import com.switchfully.eurder.api.dtos.CreateItemGroupDto;
+import com.switchfully.eurder.api.dtos.ShowAllOrdersDto;
 import com.switchfully.eurder.api.dtos.ShowItemGroupDto;
 import com.switchfully.eurder.api.dtos.ShowOrderDto;
 import com.switchfully.eurder.domain.ItemGroup;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class OrderMapper {
@@ -40,7 +42,10 @@ public class OrderMapper {
     }
 
     private ShowItemGroupDto mapToShowItemGroupDto(ItemGroup itemGroup) {
-        return new ShowItemGroupDto(itemGroup.getItemId(), itemGroup.getAmount(), itemGroup.getShippingDate());
+        return new ShowItemGroupDto(itemGroup.getItemId(), itemGroup.getAmount(), itemGroup.getShippingDate(), itemGroup.getTotalPrice());
     }
 
+    public ShowAllOrdersDto mapToShowAllOrders(List<Order> orders) {
+        return new ShowAllOrdersDto(orders.stream().map(this::mapToShowOrderDto).collect(Collectors.toList()), orders.stream().mapToDouble(Order::getTotalPrice).sum());
+    }
 }
