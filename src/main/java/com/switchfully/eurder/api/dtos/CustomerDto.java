@@ -3,6 +3,8 @@ package com.switchfully.eurder.api.dtos;
 import com.switchfully.eurder.domain.users.Address;
 import com.switchfully.eurder.domain.users.Role;
 
+import javax.validation.constraints.Email;
+
 public class CustomerDto {
     private String id;
     private String firstName;

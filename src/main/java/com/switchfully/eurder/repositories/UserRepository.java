@@ -43,4 +43,8 @@ public class UserRepository {
     public User getUserById(String customerId) {
         return userMap.get(customerId);
     }
+
+    public boolean eMailAlreadyExits(String email) {
+        return userMap.values().stream().anyMatch(user -> user.geteMail().equals(email));
+    }
 }

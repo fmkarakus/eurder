@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -19,13 +20,13 @@ public class UserController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public CustomerDto createCustomer(@RequestBody CreateCustomerDto newCustomer){
+    public CustomerDto createCustomer(@Valid @RequestBody CreateCustomerDto newCustomer){
         return userService.addCustomer(newCustomer);
     }
 
     @PostMapping(path="{userId}/order",consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public ShowOrderDto createOrder(@PathVariable String userId, @RequestHeader String authorization, @RequestBody CreateItemGroupDto[] newOrders){
+    public ShowOrderDto createOrder(@PathVariable String userId, @RequestHeader String authorization,@Valid @RequestBody CreateItemGroupDto[] newOrders){
         return userService.addOrder(userId,authorization,newOrders);
     }
 

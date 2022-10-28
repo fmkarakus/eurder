@@ -1,11 +1,13 @@
 package com.switchfully.eurder.domain.users;
 
+import javax.validation.constraints.Email;
 import java.util.UUID;
 
 public class User {
     private final String id;
     private String firstName;
     private String lastName;
+    @Email(message = "Email should be valid")
     private String eMail;
     private Address address;
     private String phoneNumber;

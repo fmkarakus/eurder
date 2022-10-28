@@ -23,12 +23,12 @@ public class SecurityService {
         UsernamePassword usernamePassword = getUsernamePassword(authorization);
         User user = userRepository.getPersonbyEmail(usernamePassword.getUsername()).orElseGet(() -> {
             logger.error("Wrong credentials");
-            throw new UnauthorizatedException();
+            throw new WrongCredentialException();
         });
 
         if (!user.doesPasswordMatch(usernamePassword.getPassword())) {
             logger.error("Password does not match for user " + usernamePassword.getUsername());
-            throw new WrongPasswordException();
+            throw new WrongCredentialException();
         }
         if (!user.canHaveAccessTo(feature)) {
             logger.error("User " + user.getFullName() + " does not have access to " + feature);

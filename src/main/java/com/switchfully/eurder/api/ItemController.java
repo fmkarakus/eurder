@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -20,7 +21,7 @@ private final ItemService itemService;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public ItemDto addNewItem(@RequestHeader String authorization, @RequestBody CreateItemDto newItem){
+    public ItemDto addNewItem(@RequestHeader String authorization,@Valid @RequestBody CreateItemDto newItem){
       return  itemService.addNewItem(authorization,newItem);
     }
 

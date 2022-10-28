@@ -22,18 +22,19 @@ public class UserService {
     private final OrderMapper orderMapper;
     private final OrderRepository orderRepository;
 
+
     public UserService(SecurityService securityService, UserRepository userRepository, UserMapper userMapper, OrderMapper orderMapper, OrderRepository orderRepository) {
         this.securityService = securityService;
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.orderMapper = orderMapper;
         this.orderRepository = orderRepository;
+
     }
 
     public CustomerDto addCustomer(CreateCustomerDto newCustomer) {
+        if (userRepository.eMailAlreadyExits(newCustomer.geteMail())) throw new IllegalArgumentException("This email address is already in use.");
         User newUser = userRepository.addCustomer(userMapper.mapToUser(newCustomer));
-        System.out.println(newCustomer.geteMail());
-        System.out.println(newCustomer.geteMail());
         return userMapper.mapToCustomeDto(newUser);
     }
 
