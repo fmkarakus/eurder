@@ -6,6 +6,7 @@ import com.switchfully.eurder.api.dtos.*;
 import com.switchfully.eurder.domain.Order;
 import com.switchfully.eurder.domain.users.Feature;
 import com.switchfully.eurder.domain.users.User;
+import com.switchfully.eurder.repositories.ItemRepository;
 import com.switchfully.eurder.repositories.OrderRepository;
 import com.switchfully.eurder.repositories.UserRepository;
 import org.springframework.stereotype.Service;
@@ -18,14 +19,16 @@ import java.util.stream.Collectors;
 public class UserService {
     private final SecurityService securityService;
     private final UserRepository userRepository;
+    private final ItemRepository itemRepository;
     private final UserMapper userMapper;
     private final OrderMapper orderMapper;
     private final OrderRepository orderRepository;
 
 
-    public UserService(SecurityService securityService, UserRepository userRepository, UserMapper userMapper, OrderMapper orderMapper, OrderRepository orderRepository) {
+    public UserService(SecurityService securityService, UserRepository userRepository, ItemRepository itemRepository, UserMapper userMapper, OrderMapper orderMapper, OrderRepository orderRepository) {
         this.securityService = securityService;
         this.userRepository = userRepository;
+        this.itemRepository = itemRepository;
         this.userMapper = userMapper;
         this.orderMapper = orderMapper;
         this.orderRepository = orderRepository;
@@ -39,8 +42,12 @@ public class UserService {
 
     public ShowOrderDto addOrder(String userId, String authorization, CreateItemGroupDto[] newOrders) {
         securityService.validateAuthorization(authorization, Feature.ORDER);
+        assertUserExists(userId);
         Order newOrder = new Order(userId);
-        Arrays.stream(newOrders).forEach(itemGroupDto -> newOrder.addToItemGroupList(orderMapper.mapToItemGroup(itemGroupDto)));
+        Arrays.stream(newOrders).forEach(itemGroupDto -> {
+            assertItemExits(itemGroupDto.getItemId());
+            newOrder.addToItemGroupList(orderMapper.mapToItemGroup(itemGroupDto));
+        });
         orderRepository.addNewOrder(newOrder);
         return orderMapper.mapToShowOrderDto(newOrder);
     }
@@ -54,6 +61,14 @@ public class UserService {
 
     public ShowUserDto getCustomer(String authorization, String customerId) {
         securityService.validateAuthorization(authorization, Feature.VIEW_USERS);
+        assertUserExists(customerId);
         return userMapper.maptoShowUserDto(userRepository.getUserById(customerId));
+    }
+
+    private void assertUserExists(String userId) {
+        if(userRepository.getUserById(userId)==null) throw new IllegalArgumentException("There is no customer with the id "+ userId +".");
+    }
+    private void assertItemExits(String itemId) {
+        if(itemRepository.getItemMap().get(itemId)==null) throw new IllegalArgumentException("Item with the id "+ itemId +" does not exist.");
     }
 }
