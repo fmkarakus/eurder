@@ -4,6 +4,8 @@ import com.switchfully.eurder.domain.users.Feature;
 import com.switchfully.eurder.domain.users.User;
 import com.switchfully.eurder.repositories.UserRepository;
 import com.switchfully.eurder.domain.users.UsernamePassword;
+import com.switchfully.eurder.service.exceptions.UnauthorizatedException;
+import com.switchfully.eurder.service.exceptions.WrongCredentialException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

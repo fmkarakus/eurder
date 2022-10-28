@@ -1,7 +1,7 @@
 package com.switchfully.eurder.api;
 
-import com.switchfully.eurder.service.UnauthorizatedException;
-import com.switchfully.eurder.service.WrongCredentialException;
+import com.switchfully.eurder.service.exceptions.UnauthorizatedException;
+import com.switchfully.eurder.service.exceptions.WrongCredentialException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;

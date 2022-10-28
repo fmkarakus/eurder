@@ -94,7 +94,25 @@ class UserControllerTest {
                 .statusCode(HttpStatus.OK.value())
                 .extract();
     }
-
+    @Test
+    void viewOneCustomer_WrongCredentialsThrowsError() {
+        String aUserId = userRepository.getPersonbyEmail("customer@test.be").get().getId();
+        given()
+                .baseUri("http://localhost")
+                .port(port)
+                .auth()
+                .preemptive()
+                .basic("wrong@eurder.com", "wrong")
+                .header("Accept", "application/json")
+                .header("Content-type", "application/json")
+                .and()
+                .when()
+                .get("/customers/"+aUserId)
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.UNAUTHORIZED.value())
+                .extract();
+    }
     @Test
     void viewOneCustomer_whenByCustomer_thenThrowsException() {
         String aUserId = userRepository.getPersonbyEmail("customer@test.be").get().getId();

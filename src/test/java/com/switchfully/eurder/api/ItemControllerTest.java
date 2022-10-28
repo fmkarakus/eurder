@@ -44,6 +44,33 @@ class ItemControllerTest {
     }
 
     @Test
+    void addItem_whenItemNameIsBlank_ThenThrowsException() {
+        String requestBody = """
+            {
+              "name": "",
+              "description": "string",
+              "price": 5.2,
+              "amount": 7
+            }
+            """;
+        given()
+                .baseUri("http://localhost")
+                .port(port)
+                .header("Content-type", "application/json")
+                .auth()
+                .preemptive()
+                .basic("admin@eurder.com", "password")
+                .header("Accept", ContentType.JSON.getAcceptHeader())
+                .body(requestBody)
+                .when()
+                .post("/items")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .extract();
+    }
+
+    @Test
     void viewAllItems() {
         given()
                 .baseUri("http://localhost")
