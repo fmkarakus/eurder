@@ -46,6 +46,7 @@ public class UserService {
         Order newOrder = new Order(userId);
         Arrays.stream(newOrders).forEach(itemGroupDto -> {
             assertItemExits(itemGroupDto.getItemId());
+            itemRepository.decreaseStockAmount(itemGroupDto.getItemId(),itemGroupDto.getAmount());
             newOrder.addToItemGroupList(orderMapper.mapToItemGroup(itemGroupDto));
         });
         orderRepository.addNewOrder(newOrder);
