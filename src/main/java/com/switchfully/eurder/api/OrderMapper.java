@@ -31,7 +31,8 @@ public class OrderMapper {
     }
 
     private LocalDate setShippingDate(String itemId) {
-        if (itemRepository.getItemMap().get(itemId).getAmount() == 0) return LocalDate.now().plusDays(7);
+        System.out.println(itemRepository.getItemMap().get(itemId).getAmount());
+        if (itemRepository.getItemMap().get(itemId).getAmount() <= 0) return LocalDate.now().plusDays(7);
         return LocalDate.now().plusDays(1);
     }
 
