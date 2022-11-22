@@ -1,15 +1,10 @@
-package com.switchfully.eurder.api;
+package com.switchfully.eurder.api.mappers;
 
 import com.switchfully.eurder.api.dtos.CreateItemDto;
-import com.switchfully.eurder.api.dtos.CreateItemGroupDto;
 import com.switchfully.eurder.api.dtos.ItemDto;
 import com.switchfully.eurder.api.dtos.UpdateItemDto;
 import com.switchfully.eurder.domain.Item;
-import com.switchfully.eurder.domain.ItemGroup;
-import com.switchfully.eurder.repositories.ItemRepository;
 import org.springframework.stereotype.Component;
-
-import java.time.LocalDate;
 
 
 @Component

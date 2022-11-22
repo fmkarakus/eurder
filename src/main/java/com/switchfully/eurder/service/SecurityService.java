@@ -1,8 +1,8 @@
 package com.switchfully.eurder.service;
 
 import com.switchfully.eurder.domain.users.Feature;
-import com.switchfully.eurder.domain.users.User;
-import com.switchfully.eurder.repositories.UserRepository;
+import com.switchfully.eurder.domain.users.Person;
+import com.switchfully.eurder.repositories.PersonRepository;
 import com.switchfully.eurder.domain.users.UsernamePassword;
 import com.switchfully.eurder.service.exceptions.UnauthorizatedException;
 import com.switchfully.eurder.service.exceptions.WrongCredentialException;
@@ -15,25 +15,28 @@ import java.util.Base64;
 @Service
 public class SecurityService {
     private final Logger logger = LoggerFactory.getLogger(SecurityService.class);
-    private final UserRepository userRepository;
 
-    public SecurityService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    private final PersonRepository personRepository;
+
+    public SecurityService(PersonRepository personRepository) {
+        this.personRepository = personRepository;
     }
+
 
     public void validateAuthorization(String authorization, Feature feature) {
         UsernamePassword usernamePassword = getUsernamePassword(authorization);
-        User user = userRepository.getPersonbyEmail(usernamePassword.getUsername()).orElseGet(() -> {
+
+        Person person = personRepository.findByEmail(usernamePassword.getUsername()).orElseGet(() -> {
             logger.error("Wrong credentials");
             throw new WrongCredentialException();
         });
 
-        if (!user.doesPasswordMatch(usernamePassword.getPassword())) {
+        if (!person.doesPasswordMatch(usernamePassword.getPassword())) {
             logger.error("Password does not match for user " + usernamePassword.getUsername());
             throw new WrongCredentialException();
         }
-        if (!user.canHaveAccessTo(feature)) {
-            logger.error("User " + user.getFullName() + " does not have access to " + feature);
+        if (!person.canHaveAccessTo(feature)) {
+            logger.error("User " + person.getFullName() + " does not have access to " + feature);
             throw new UnauthorizatedException();
         }
 

@@ -26,7 +26,7 @@ public class UserController {
 
     @PostMapping(path="{userId}/order",consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public ShowOrderDto createOrder(@PathVariable String userId, @RequestHeader String authorization,@Valid @RequestBody CreateItemGroupDto[] newOrders){
+    public ShowOrderDto createOrder(@PathVariable String userId, @RequestHeader String authorization, @Valid @RequestBody CreateItemGroupDto[] newOrders){
         return userService.addOrder(userId,authorization,newOrders);
     }
 

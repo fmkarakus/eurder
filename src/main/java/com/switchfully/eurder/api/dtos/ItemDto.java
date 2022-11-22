@@ -1,7 +1,5 @@
 package com.switchfully.eurder.api.dtos;
 
-import java.util.UUID;
-
 public class ItemDto {
     private final String id;
     private final String name;

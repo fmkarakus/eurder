@@ -1,11 +1,12 @@
-package com.switchfully.eurder.api;
+package com.switchfully.eurder.api.mappers;
 
 import com.switchfully.eurder.api.dtos.CreateCustomerDto;
 import com.switchfully.eurder.api.dtos.CustomerDto;
 import com.switchfully.eurder.api.dtos.ShowOrderDto;
 import com.switchfully.eurder.api.dtos.ShowUserDto;
 import com.switchfully.eurder.domain.users.Address;
-import com.switchfully.eurder.domain.users.User;
+import com.switchfully.eurder.domain.users.Person;
+import com.switchfully.eurder.domain.users.PostalCode;
 import com.switchfully.eurder.repositories.OrderRepository;
 import org.springframework.stereotype.Component;
 
@@ -23,19 +24,19 @@ public class UserMapper {
         this.orderMapper = orderMapper;
     }
 
-    public User mapToUser(CreateCustomerDto dto) {
-        return new User(dto.getFirstName(), dto.getLastName(), dto.geteMail(), new Address(dto.getStreet(), dto.getHouseNumber(), dto.getPostCode(), dto.getCity()), dto.getPhoneNumber(), dto.getPassword());
+    public Person mapToUser(CreateCustomerDto dto) {
+        return new Person(dto.getFirstName(), dto.getLastName(), dto.geteMail(), new Address(dto.getStreet(), dto.getHouseNumber(),new PostalCode(dto.getPostCode(), dto.getCity())), dto.getPhoneNumber(), dto.getPassword());
     }
 
-    public CustomerDto mapToCustomeDto(User customer){
-        return new CustomerDto(customer.getId(), customer.getFirstName(), customer.getLastName(), customer.geteMail(), customer.getAddress(), customer.getPhoneNumber(),customer.getRole());
+    public CustomerDto mapToCustomeDto(Person customer){
+        return new CustomerDto(customer.getId(), customer.getFirstName(), customer.getLastName(), customer.geteEmail(), customer.getAddress(), customer.getPhoneNumber(),customer.getRole());
     };
 
-    public ShowUserDto maptoShowUserDto(User customer){
+    public ShowUserDto maptoShowUserDto(Person customer){
         List<ShowOrderDto> ordersOfCustomer=orderRepository.getAllOrders().stream()
                 .filter(order -> order.getCustomerId().equals(customer.getId()))
                 .map(orderMapper::mapToShowOrderDto)
                 .collect(Collectors.toList());
-        return new ShowUserDto(customer.getId(), customer.getFirstName(), customer.getLastName(), customer.geteMail(), customer.getAddress(), customer.getPhoneNumber(), ordersOfCustomer);
+        return new ShowUserDto(customer.getId(), customer.getFirstName(), customer.getLastName(), customer.geteEmail(), customer.getAddress(), customer.getPhoneNumber(), ordersOfCustomer);
     }
 }

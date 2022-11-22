@@ -2,15 +2,15 @@ package com.switchfully.eurder.service;
 
 import com.switchfully.eurder.api.dtos.CreateItemDto;
 import com.switchfully.eurder.api.dtos.ItemDto;
-import com.switchfully.eurder.api.ItemMapper;
+import com.switchfully.eurder.api.mappers.ItemMapper;
 import com.switchfully.eurder.api.dtos.UpdateItemDto;
 import com.switchfully.eurder.domain.users.Feature;
 import com.switchfully.eurder.domain.Item;
 import com.switchfully.eurder.repositories.ItemRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ItemService {
@@ -32,20 +32,24 @@ public class ItemService {
 
     public List<ItemDto> getAllItems(String authorization) {
         securityService.validateAuthorization(authorization, Feature.GET_ALL_ITEMS);
-        List<ItemDto> items = new ArrayList<>();
-        itemRepository.getItemMap().values().forEach(item -> items.add(itemMapper.mapToItemDto(item)));
-        return items;
+
+        return itemRepository.getAllItems()
+                .stream()
+                .map(itemMapper::mapToItemDto)
+                .collect(Collectors.toList());
+
     }
 
-    public ItemDto updateItem(String authorization, String itemId, UpdateItemDto updatedItem) {
+    public ItemDto updateItem(String authorization, String itemId, UpdateItemDto updateItemDto) {
         securityService.validateAuthorization(authorization, Feature.UPDATE_ITEMS);
         assertItemExits(itemId);
-        Item item = itemRepository.updateItem(itemId, itemMapper.mapUpdateItemDtoToItem(updatedItem));
+        Item updateItem = itemMapper.mapUpdateItemDtoToItem(updateItemDto);
+        Item item=itemRepository.getById(itemId).updateItem(updateItem);
         return itemMapper.mapToItemDto(item);
     }
 
     private void assertItemExits(String itemId) {
-        if (itemRepository.getItemMap().get(itemId) == null)
+        if (itemRepository.getById(itemId) == null)
             throw new IllegalArgumentException("Item with the id " + itemId + " does not exist.");
     }
 }

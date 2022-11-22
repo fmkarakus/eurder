@@ -1,9 +1,9 @@
 package com.switchfully.eurder.repositories;
 
-import com.switchfully.eurder.api.dtos.CreateItemDto;
 import com.switchfully.eurder.domain.Item;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,17 +36,11 @@ public class ItemRepository {
         return itemMap;
     }
 
-    public void decreaseStockAmount(String itemId, int amount) {
-        itemMap.get(itemId).decreaseStock(amount);
+    public Item getById(String itemId) {
+        return itemMap.get(itemId);
     }
 
-    public Item updateItem(String itemId, Item updateItem) {
-        Item item = itemMap.get(itemId);
-        if (updateItem.getName() != null && !updateItem.getName().isBlank()) item.setName(updateItem.getName());
-        if (updateItem.getDescription() != null && !updateItem.getDescription().isBlank())
-            item.setDescription(updateItem.getDescription());
-        if (updateItem.getPrice() > 0) item.setPrice(updateItem.getPrice());
-        if (updateItem.getAmount() > 0) item.increaseStock(updateItem.getAmount());
-        return item;
+    public Collection<Item> getAllItems() {
+        return itemMap.values();
     }
 }

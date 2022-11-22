@@ -1,7 +1,6 @@
 package com.switchfully.eurder.repositories;
 
 import com.switchfully.eurder.domain.Order;
-import com.switchfully.eurder.domain.users.User;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collection;

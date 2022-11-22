@@ -2,7 +2,6 @@ package com.switchfully.eurder.api.dtos;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 public class CreateItemDto {
     @NotBlank(message = "Name of item cannot be blank")
@@ -10,10 +9,10 @@ public class CreateItemDto {
     private String description;
 
     @Min(0)
-    private double price;
+    private Double price;
 
     @Min(0)
-    private int amount;
+    private Integer amount;
 
     public CreateItemDto(String name, String description, double price, int amount) {
         this.name = name;

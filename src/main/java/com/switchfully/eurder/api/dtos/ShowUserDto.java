@@ -5,7 +5,7 @@ import com.switchfully.eurder.domain.users.Address;
 import java.util.List;
 
 public class ShowUserDto {
-    private final String id;
+    private final long id;
     private String firstName;
     private String lastName;
     private String eMail;
@@ -13,7 +13,7 @@ public class ShowUserDto {
     private String phoneNumber;
     private List<ShowOrderDto> allOrders;
 
-    public ShowUserDto(String id, String firstName, String lastName, String eMail, Address address, String phoneNumber, List<ShowOrderDto> allOrders) {
+    public ShowUserDto(long id, String firstName, String lastName, String eMail, Address address, String phoneNumber, List<ShowOrderDto> allOrders) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -23,7 +23,7 @@ public class ShowUserDto {
         this.allOrders = allOrders;
     }
 
-    public String getId() {
+    public long getId() {
         return id;
     }
 

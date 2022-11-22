@@ -3,10 +3,8 @@ package com.switchfully.eurder.api.dtos;
 import com.switchfully.eurder.domain.users.Address;
 import com.switchfully.eurder.domain.users.Role;
 
-import javax.validation.constraints.Email;
-
 public class CustomerDto {
-    private String id;
+    private long id;
     private String firstName;
     private String lastName;
     private String eMail;
@@ -14,7 +12,7 @@ public class CustomerDto {
     private String phoneNumber;
     private Role role;
 
-    public CustomerDto(String id, String firstName, String lastName, String eMail, Address address, String phoneNumber, Role role) {
+    public CustomerDto(long id, String firstName, String lastName, String eMail, Address address, String phoneNumber, Role role) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -24,7 +22,7 @@ public class CustomerDto {
         this.role = role;
     }
 
-    public String getId() {
+    public long getId() {
         return id;
     }
 

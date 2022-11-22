@@ -1,4 +1,4 @@
-package com.switchfully.eurder.api;
+package com.switchfully.eurder.api.mappers;
 
 import com.switchfully.eurder.api.dtos.CreateItemGroupDto;
 import com.switchfully.eurder.api.dtos.ShowAllOrdersDto;
@@ -23,11 +23,12 @@ public class OrderMapper {
     }
 
     public ItemGroup mapToItemGroup(CreateItemGroupDto dto) {
-        return new ItemGroup(dto.getItemId(), dto.getAmount(), setShippingDate(dto.getItemId()), setTotalPrice(dto));
+        return new ItemGroup(itemRepository.getById(dto.getItemId()), dto.getAmount(), setShippingDate(dto.getItemId()), setTotalPrice(dto));
     }
 
     private double setTotalPrice(CreateItemGroupDto dto) {
-        return itemRepository.getItemMap().get(dto.getItemId()).getPrice() * dto.getAmount();
+        double priceOfItem=itemRepository.getItemMap().get(dto.getItemId()).getPrice();
+        return priceOfItem * dto.getAmount();
     }
 
     private LocalDate setShippingDate(String itemId) {
@@ -42,7 +43,7 @@ public class OrderMapper {
     }
 
     private ShowItemGroupDto mapToShowItemGroupDto(ItemGroup itemGroup) {
-        return new ShowItemGroupDto(itemGroup.getItemId(), itemGroup.getAmount(), itemGroup.getShippingDate(), itemGroup.getTotalPrice());
+        return new ShowItemGroupDto(itemGroup.getItem().getId(), itemGroup.getAmount(), itemGroup.getShippingDate(), itemGroup.getTotalPrice());
     }
 
     public ShowAllOrdersDto mapToShowAllOrders(List<Order> orders) {

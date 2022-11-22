@@ -1,16 +1,28 @@
 package com.switchfully.eurder.domain.users;
 
-public class Address {
-    private String street;
-    private String houseNumber;
-    private String postCode;
-    private String city;
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
-    public Address(String street, String houseNumber, String postCode, String city) {
+@Embeddable
+public class Address {
+    @Column(name = "street_name")
+    private String street;
+    @Column(name = "house_number")
+    private String houseNumber;
+    @ManyToOne
+    @JoinColumn(name = "postcode")
+    private PostalCode postCode;
+
+    public Address(String street, String houseNumber, PostalCode postCode) {
         this.street = street;
         this.houseNumber = houseNumber;
         this.postCode = postCode;
-        this.city = city;
+    }
+
+    public Address() {
+
     }
 
     public String getStreet() {
@@ -21,11 +33,8 @@ public class Address {
         return houseNumber;
     }
 
-    public String getPostCode() {
+    public PostalCode getPostCode() {
         return postCode;
     }
 
-    public String getCity() {
-        return city;
-    }
 }

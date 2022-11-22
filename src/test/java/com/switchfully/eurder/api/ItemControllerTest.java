@@ -43,8 +43,7 @@ class ItemControllerTest {
                 .post("/items")
                 .then()
                 .assertThat()
-                .statusCode(HttpStatus.CREATED.value())
-                .extract();
+                .statusCode(HttpStatus.CREATED.value());
     }
 
     @Test
@@ -64,7 +63,7 @@ class ItemControllerTest {
                 .then()
                 .assertThat()
                 .statusCode(HttpStatus.CREATED.value())
-                .extract();
+                ;
     }
 
     @Test
@@ -96,6 +95,7 @@ class ItemControllerTest {
 
     @Test
     void viewAllItems() {
+
         given()
                 .baseUri("http://localhost")
                 .port(port)
