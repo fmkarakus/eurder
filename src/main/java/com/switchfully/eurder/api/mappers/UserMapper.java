@@ -33,8 +33,8 @@ public class UserMapper {
     };
 
     public ShowUserDto maptoShowUserDto(Person customer){
-        List<ShowOrderDto> ordersOfCustomer=orderRepository.getAllOrders().stream()
-                .filter(order -> order.getCustomerId().equals(customer.getId()))
+        List<ShowOrderDto> ordersOfCustomer=orderRepository.findAll().stream()
+                .filter(order -> order.getCustomer().getId()==customer.getId())
                 .map(orderMapper::mapToShowOrderDto)
                 .collect(Collectors.toList());
         return new ShowUserDto(customer.getId(), customer.getFirstName(), customer.getLastName(), customer.geteEmail(), customer.getAddress(), customer.getPhoneNumber(), ordersOfCustomer);

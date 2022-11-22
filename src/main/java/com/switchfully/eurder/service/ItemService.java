@@ -43,9 +43,14 @@ public class ItemService {
     public ItemDto updateItem(String authorization, long itemId, UpdateItemDto updateItemDto) {
         securityService.validateAuthorization(authorization, Feature.UPDATE_ITEMS);
         Item updateItem = itemMapper.mapUpdateItemDtoToItem(updateItemDto);
-        Item item=itemRepository.findById(itemId).orElseThrow(()-> new IllegalArgumentException("Item with the id " + itemId + " does not exist."));
+        Item item= getItemById(itemId);
         item.updateItem(updateItem);
         return itemMapper.mapToItemDto(item);
     }
+
+    public Item getItemById(long itemId) {
+        return itemRepository.findById(itemId).orElseThrow(() -> new IllegalArgumentException("Item with the id " + itemId + " does not exist."));
+    }
+
 
 }

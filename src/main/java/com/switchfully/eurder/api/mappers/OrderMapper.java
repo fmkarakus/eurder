@@ -6,7 +6,7 @@ import com.switchfully.eurder.api.dtos.ShowItemGroupDto;
 import com.switchfully.eurder.api.dtos.ShowOrderDto;
 import com.switchfully.eurder.domain.ItemGroup;
 import com.switchfully.eurder.domain.Order;
-import com.switchfully.eurder.repositories.ItemRepository;
+import com.switchfully.eurder.service.ItemService;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -16,28 +16,29 @@ import java.util.stream.Collectors;
 
 @Component
 public class OrderMapper {
-    private final ItemRepository itemRepository;
+    private final ItemService itemService;
 
-    public OrderMapper(ItemRepository itemRepository) {
-        this.itemRepository = itemRepository;
+    public OrderMapper(ItemService itemService) {
+        this.itemService = itemService;
     }
 
-//    public ItemGroup mapToItemGroup(CreateItemGroupDto dto) {
-//        return new ItemGroup(itemRepository.getById(dto.getItemId()), dto.getAmount(), setShippingDate(dto.getItemId()), setTotalPrice(dto));
-//    }
-//
-//    private double setTotalPrice(CreateItemGroupDto dto) {
-//        double priceOfItem=itemRepository.getItemMap().get(dto.getItemId()).getPrice();
-//        return priceOfItem * dto.getAmount();
-//    }
-//
-//    private LocalDate setShippingDate(String itemId) {
-//        if (itemRepository.getItemMap().get(itemId).getAmount() <= 0) return LocalDate.now().plusDays(7);
-//        return LocalDate.now().plusDays(1);
-//    }
+
+    public ItemGroup mapToItemGroup(CreateItemGroupDto dto) {
+        return new ItemGroup(itemService.getItemById(dto.getItemId()), dto.getAmount(), setShippingDate(dto.getItemId(),dto.getAmount()), setTotalPrice(dto));
+    }
+
+    private double setTotalPrice(CreateItemGroupDto dto) {
+        double priceOfItem = itemService.getItemById(dto.getItemId()).getPrice();
+        return priceOfItem * dto.getAmount();
+    }
+
+    private LocalDate setShippingDate(long itemId, int amount) {
+        if ((itemService.getItemById(itemId).getAmount() - amount )< 0) return LocalDate.now().plusDays(7);
+        return LocalDate.now().plusDays(1);
+    }
 
     public ShowOrderDto mapToShowOrderDto(Order order) {
-        List<ShowItemGroupDto> itemGroupDtos=new ArrayList<>();
+        List<ShowItemGroupDto> itemGroupDtos = new ArrayList<>();
         order.getItemGroupList().forEach(itemGroup -> itemGroupDtos.add(mapToShowItemGroupDto(itemGroup)));
         return new ShowOrderDto(order.getId(), itemGroupDtos, order.getTotalPrice());
     }

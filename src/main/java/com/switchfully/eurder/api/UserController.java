@@ -24,11 +24,11 @@ public class UserController {
         return userService.addCustomer(newCustomer);
     }
 
-//    @PostMapping(path="{userId}/order",consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-//    @ResponseStatus(HttpStatus.CREATED)
-//    public ShowOrderDto createOrder(@PathVariable String userId, @RequestHeader String authorization, @Valid @RequestBody CreateItemGroupDto[] newOrders){
-//        return userService.addOrder(userId,authorization,newOrders);
-//    }
+    @PostMapping(path="{userId}/order",consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.CREATED)
+    public ShowOrderDto createOrder(@PathVariable long userId, @RequestHeader String authorization, @Valid @RequestBody CreateItemGroupDto[] newOrders){
+        return userService.addOrder(userId,authorization,newOrders);
+    }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
@@ -44,7 +44,7 @@ public class UserController {
 
     @GetMapping(path="{customerId}/orders",produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public ShowAllOrdersDto getCustomerOrders(@RequestHeader String authorization, @PathVariable String customerId) {
+    public ShowAllOrdersDto getCustomerOrders(@RequestHeader String authorization, @PathVariable long customerId) {
         return userService.getCustomerOrders(authorization,customerId);
     }
 }

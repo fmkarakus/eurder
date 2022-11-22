@@ -5,16 +5,16 @@ import javax.validation.constraints.NotBlank;
 
 public class CreateItemGroupDto {
     @NotBlank(message = "Item Id is required")
-    private String itemId;
+    private long itemId;
     @Min(1)
     private int amount;
 
-    public CreateItemGroupDto(String itemId, int amount) {
+    public CreateItemGroupDto(long itemId, int amount) {
         this.itemId = itemId;
         this.amount = amount;
     }
 
-    public String getItemId() {
+    public long getItemId() {
         return itemId;
     }
 

@@ -1,29 +1,45 @@
 package com.switchfully.eurder.domain;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import com.switchfully.eurder.domain.users.Person;
 
+import javax.persistence.*;
+import java.util.List;
+
+@Entity
+@Table(name="orders")
 public class Order {
-    private final String id;
-    private final String customerId;
-    private final List<ItemGroup> itemGroupList;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_seq")
+    @SequenceGenerator(name = "order_seq", sequenceName = "orders_seq", allocationSize = 1)
+    private long id;
+
+    @ManyToOne
+    @JoinColumn(name="customer_id")
+    private Person customer;
+
+    @OneToMany(cascade = CascadeType.PERSIST)
+    @JoinColumn(name="orders_id")
+    private  List<ItemGroup> itemGroupList;
+    @JoinColumn(name="total_price")
     private double totalPrice = 0;
 
-    public Order(String customerId, List<ItemGroup> itemGroupList) {
-        this.customerId = customerId;
-        this.id = UUID.randomUUID().toString();
+    public Order(Person customer, List<ItemGroup> itemGroupList) {
+        this.customer = customer;
         this.itemGroupList = itemGroupList;
         totalPrice = itemGroupList.stream().mapToDouble(ItemGroup::getTotalPrice).sum();
     }
 
+    public Order() {
 
-    public String getId() {
+    }
+
+
+    public long getId() {
         return id;
     }
 
-    public String getCustomerId() {
-        return customerId;
+    public Person getCustomer() {
+        return customer;
     }
 
     public List<ItemGroup> getItemGroupList() {

@@ -3,12 +3,12 @@ package com.switchfully.eurder.api.dtos;
 import java.util.List;
 
 public class ShowOrderDto {
-    private final String orderId;
+    private final long orderId;
     private List<ShowItemGroupDto> orders;
 
     private double totalPrice;
 
-    public ShowOrderDto(String orderId, List<ShowItemGroupDto> orders, double totalPrice) {
+    public ShowOrderDto(long orderId, List<ShowItemGroupDto> orders, double totalPrice) {
         this.orderId = orderId;
         this.orders = orders;
         this.totalPrice = totalPrice;
@@ -22,7 +22,7 @@ public class ShowOrderDto {
         return totalPrice;
     }
 
-    public String getOrderId() {
+    public long getOrderId() {
         return orderId;
     }
 }
