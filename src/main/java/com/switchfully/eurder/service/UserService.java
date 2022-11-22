@@ -68,10 +68,10 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    public ShowUserDto getCustomer(String authorization, String customerId) {
+    public ShowUserDto getCustomer(String authorization, long customerId) {
         securityService.validateAuthorization(authorization, Feature.VIEW_USERS);
-        assertUserExists(customerId);
-        return userMapper.maptoShowUserDto(userRepository.getUserById(customerId));
+        Person customer=personRepository.findById(customerId).orElseThrow(()->new IllegalArgumentException("There is no customer with the id " + customerId + "."));
+        return userMapper.maptoShowUserDto(customer);
     }
 
     private void assertUserExists(String userId) {

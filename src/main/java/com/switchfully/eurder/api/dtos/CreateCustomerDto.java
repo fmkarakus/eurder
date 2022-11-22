@@ -23,6 +23,18 @@ public class CreateCustomerDto {
     private String city;
     private String phoneNumber;
 
+    public CreateCustomerDto(String firstName, String lastName, String eMail, String street, String houseNumber, String postCode, String city, String phoneNumber, String password) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.eMail = eMail;
+        this.street = street;
+        this.houseNumber = houseNumber;
+        this.postCode = postCode;
+        this.city = city;
+        this.phoneNumber = phoneNumber;
+        this.password = password;
+    }
+
     @Size(min=8, message=" Password must be equal to or greater than 8 characters")
     private String password;
 

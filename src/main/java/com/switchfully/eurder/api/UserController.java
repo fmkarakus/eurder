@@ -38,7 +38,7 @@ public class UserController {
 
     @GetMapping(path="{customerId}",produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public ShowUserDto getCustomer(@RequestHeader String authorization, @PathVariable String customerId) {
+    public ShowUserDto getCustomer(@RequestHeader String authorization, @PathVariable long customerId) {
         return userService.getCustomer(authorization,customerId);
     }
 

@@ -1,7 +1,11 @@
 package com.switchfully.eurder.api;
 
+import com.switchfully.eurder.api.dtos.CreateCustomerDto;
 import com.switchfully.eurder.api.dtos.CustomerDto;
+import com.switchfully.eurder.api.mappers.UserMapper;
+import com.switchfully.eurder.domain.users.Person;
 import com.switchfully.eurder.repositories.ItemRepository;
+import com.switchfully.eurder.repositories.PersonRepository;
 import com.switchfully.eurder.repositories.UserRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -19,33 +23,21 @@ import static io.restassured.RestAssured.given;
 @AutoConfigureTestDatabase
 class PersonControllerTest {
     @Autowired
-    private UserRepository userRepository;
+    private PersonRepository personRepository;
     @Autowired
-    private ItemRepository itemRepository;
+    private UserMapper userMapper;
     @LocalServerPort
     private int port;
 
     @Test
     void addCustomer() {
-        String requestBody = String.format("""
-            {
-              "firstName": "fname",
-              "lastName": "lname",
-              "eMail": "string@qd.com",
-              "street": "string",
-              "houseNumber": "string",
-              "postCode": %s,
-              "city": "Hasselt",
-              "phoneNumber": "04653122246",
-              "password": "password"
-            }
-            """, "3500");
+        CreateCustomerDto createCustomerDto=new CreateCustomerDto("fname","lname","string@qd.com","string","65","3500","Hasselt","04653122246","password");
         CustomerDto response = given()
                 .baseUri("http://localhost")
                 .port(port)
                 .header("Content-type", "application/json")
                 .and()
-                .body(requestBody)
+                .body(createCustomerDto)
                 .when()
                 .post("/customers")
                 .then()
@@ -56,44 +48,45 @@ class PersonControllerTest {
         Assertions.assertThat(response.getFirstName()).isEqualTo("fname");
     }
 
-//    @Test
-//    void viewAllCustomers() {
-//        given()
-//                .baseUri("http://localhost")
-//                .port(port)
-//                .auth()
-//                .preemptive()
-//                .basic("admin@eurder.com", "password")
-//                .header("Accept", "application/json")
-//                .header("Content-type", "application/json")
-//                .and()
-//                .when()
-//                .get("/customers")
-//                .then()
-//                .assertThat()
-//                .statusCode(HttpStatus.OK.value())
-//                .extract();
-//    }
-//
-//    @Test
-//    void viewOneCustomer() {
-//        long aUserId = userRepository.getPersonbyEmail("customer@test.be").get().getId();
-//        given()
-//                .baseUri("http://localhost")
-//                .port(port)
-//                .auth()
-//                .preemptive()
-//                .basic("admin@eurder.com", "password")
-//                .header("Accept", "application/json")
-//                .header("Content-type", "application/json")
-//                .and()
-//                .when()
-//                .get("/customers/"+aUserId)
-//                .then()
-//                .assertThat()
-//                .statusCode(HttpStatus.OK.value())
-//                .extract();
-//    }
+    @Test
+    void viewAllCustomers() {
+        given()
+                .baseUri("http://localhost")
+                .port(port)
+                .auth()
+                .preemptive()
+                .basic("admin@eurder.com", "password")
+                .header("Accept", "application/json")
+                .header("Content-type", "application/json")
+                .and()
+                .when()
+                .get("/customers")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.OK.value())
+                .extract();
+    }
+
+    @Test
+    void viewOneCustomer() {
+        CreateCustomerDto createCustomerDto=new CreateCustomerDto("fname","lname","string@qd.com","string","65","3500","Hasselt","04653122246","password");
+        Person person= personRepository.save(userMapper.mapToUser(createCustomerDto));
+        given()
+                .baseUri("http://localhost")
+                .port(port)
+                .auth()
+                .preemptive()
+                .basic("admin@eurder.com", "password")
+                .header("Accept", "application/json")
+                .header("Content-type", "application/json")
+                .and()
+                .when()
+                .get("/customers/"+person.getId())
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.OK.value())
+                .extract();
+    }
 //    @Test
 //    void viewOneCustomer_WrongCredentialsThrowsError() {
 //        String aUserId = userRepository.getPersonbyEmail("customer@test.be").get().getId();
