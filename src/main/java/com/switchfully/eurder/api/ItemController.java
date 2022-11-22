@@ -33,7 +33,7 @@ public class ItemController {
 
     @PatchMapping(path = "{itemId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public ItemDto updateItem(@RequestHeader String authorization, @PathVariable String itemId, @RequestBody UpdateItemDto updatedItem) {
+    public ItemDto updateItem(@RequestHeader String authorization, @PathVariable long itemId, @RequestBody UpdateItemDto updatedItem) {
         return itemService.updateItem(authorization, itemId, updatedItem);
     }
 }

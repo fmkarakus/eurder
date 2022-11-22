@@ -22,19 +22,19 @@ public class OrderMapper {
         this.itemRepository = itemRepository;
     }
 
-    public ItemGroup mapToItemGroup(CreateItemGroupDto dto) {
-        return new ItemGroup(itemRepository.getById(dto.getItemId()), dto.getAmount(), setShippingDate(dto.getItemId()), setTotalPrice(dto));
-    }
-
-    private double setTotalPrice(CreateItemGroupDto dto) {
-        double priceOfItem=itemRepository.getItemMap().get(dto.getItemId()).getPrice();
-        return priceOfItem * dto.getAmount();
-    }
-
-    private LocalDate setShippingDate(String itemId) {
-        if (itemRepository.getItemMap().get(itemId).getAmount() <= 0) return LocalDate.now().plusDays(7);
-        return LocalDate.now().plusDays(1);
-    }
+//    public ItemGroup mapToItemGroup(CreateItemGroupDto dto) {
+//        return new ItemGroup(itemRepository.getById(dto.getItemId()), dto.getAmount(), setShippingDate(dto.getItemId()), setTotalPrice(dto));
+//    }
+//
+//    private double setTotalPrice(CreateItemGroupDto dto) {
+//        double priceOfItem=itemRepository.getItemMap().get(dto.getItemId()).getPrice();
+//        return priceOfItem * dto.getAmount();
+//    }
+//
+//    private LocalDate setShippingDate(String itemId) {
+//        if (itemRepository.getItemMap().get(itemId).getAmount() <= 0) return LocalDate.now().plusDays(7);
+//        return LocalDate.now().plusDays(1);
+//    }
 
     public ShowOrderDto mapToShowOrderDto(Order order) {
         List<ShowItemGroupDto> itemGroupDtos=new ArrayList<>();

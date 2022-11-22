@@ -47,19 +47,19 @@ public class UserService {
         return userMapper.mapToCustomeDto(newPerson);
     }
 
-    public ShowOrderDto addOrder(String userId, String authorization, CreateItemGroupDto[] newOrders) {
-        securityService.validateAuthorization(authorization, Feature.ORDER);
-        assertUserExists(userId);
-        List<ItemGroup> itemGroupList = new ArrayList<>();
-        Arrays.stream(newOrders).forEach(itemGroupDto -> {
-            assertItemExits(itemGroupDto.getItemId());
-            ItemGroup itemGroup = orderMapper.mapToItemGroup(itemGroupDto);
-            itemGroupList.add(itemGroup);
-        });
-        Order newOrder = new Order(userId, itemGroupList);
-        orderRepository.addNewOrder(newOrder);
-        return orderMapper.mapToShowOrderDto(newOrder);
-    }
+//    public ShowOrderDto addOrder(String userId, String authorization, CreateItemGroupDto[] newOrders) {
+//        securityService.validateAuthorization(authorization, Feature.ORDER);
+//        assertUserExists(userId);
+//        List<ItemGroup> itemGroupList = new ArrayList<>();
+//        Arrays.stream(newOrders).forEach(itemGroupDto -> {
+//            assertItemExits(itemGroupDto.getItemId());
+//            ItemGroup itemGroup = orderMapper.mapToItemGroup(itemGroupDto);
+//            itemGroupList.add(itemGroup);
+//        });
+//        Order newOrder = new Order(userId, itemGroupList);
+//        orderRepository.addNewOrder(newOrder);
+//        return orderMapper.mapToShowOrderDto(newOrder);
+//    }
 
     public List<CustomerDto> getAllUsers(String authorization) {
         securityService.validateAuthorization(authorization, Feature.VIEW_USERS);
@@ -79,10 +79,10 @@ public class UserService {
             throw new IllegalArgumentException("There is no customer with the id " + userId + ".");
     }
 
-    private void assertItemExits(String itemId) {
-        if (itemRepository.getItemMap().get(itemId) == null)
-            throw new IllegalArgumentException("Item with the id " + itemId + " does not exist.");
-    }
+//    private void assertItemExits(String itemId) {
+//        if (itemRepository.getItemMap().get(itemId) == null)
+//            throw new IllegalArgumentException("Item with the id " + itemId + " does not exist.");
+//    }
 
 
     public ShowAllOrdersDto getCustomerOrders(String authorization, String customerId) {

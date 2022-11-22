@@ -26,30 +26,26 @@ public class ItemService {
 
     public ItemDto addNewItem(String authorization, CreateItemDto newItem) {
         securityService.validateAuthorization(authorization, Feature.ADD_NEW_ITEM);
-        Item item = itemRepository.addNewItem(itemMapper.mapToItem(newItem));
+        Item item = itemRepository.save(itemMapper.mapToItem(newItem));
         return itemMapper.mapToItemDto(item);
     }
 
     public List<ItemDto> getAllItems(String authorization) {
         securityService.validateAuthorization(authorization, Feature.GET_ALL_ITEMS);
 
-        return itemRepository.getAllItems()
+        return itemRepository.findAll()
                 .stream()
                 .map(itemMapper::mapToItemDto)
                 .collect(Collectors.toList());
 
     }
 
-    public ItemDto updateItem(String authorization, String itemId, UpdateItemDto updateItemDto) {
+    public ItemDto updateItem(String authorization, long itemId, UpdateItemDto updateItemDto) {
         securityService.validateAuthorization(authorization, Feature.UPDATE_ITEMS);
-        assertItemExits(itemId);
         Item updateItem = itemMapper.mapUpdateItemDtoToItem(updateItemDto);
-        Item item=itemRepository.getById(itemId).updateItem(updateItem);
+        Item item=itemRepository.findById(itemId).orElseThrow(()-> new IllegalArgumentException("Item with the id " + itemId + " does not exist."));
+        item.updateItem(updateItem);
         return itemMapper.mapToItemDto(item);
     }
 
-    private void assertItemExits(String itemId) {
-        if (itemRepository.getById(itemId) == null)
-            throw new IllegalArgumentException("Item with the id " + itemId + " does not exist.");
-    }
 }

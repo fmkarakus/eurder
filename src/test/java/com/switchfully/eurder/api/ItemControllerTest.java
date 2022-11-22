@@ -1,30 +1,39 @@
 package com.switchfully.eurder.api;
 
+import com.switchfully.eurder.api.dtos.CreateItemDto;
+import com.switchfully.eurder.api.dtos.ItemDto;
+import com.switchfully.eurder.api.dtos.UpdateItemDto;
+import com.switchfully.eurder.api.mappers.ItemMapper;
+import com.switchfully.eurder.domain.Item;
 import com.switchfully.eurder.repositories.ItemRepository;
 import io.restassured.http.ContentType;
-import org.junit.jupiter.api.Assertions;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.DirtiesContext;
 
 import static io.restassured.RestAssured.given;
-import static org.junit.jupiter.api.Assertions.*;
+
+
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@AutoConfigureTestDatabase
 class ItemControllerTest {
     @Autowired
     private ItemRepository itemRepository;
-    private static String requestBody = """
-            {
-              "name": "string",
-              "description": "string",
-              "price": 5.2,
-              "amount": 7
-            }
-            """;
+    @Autowired
+    private ItemMapper itemMapper;
+    private static CreateItemDto requestBody = new CreateItemDto(
+            "testItem",
+            "string",
+            5.2,
+            7
+    );
+
     @LocalServerPort
     private int port;
 
@@ -48,8 +57,9 @@ class ItemControllerTest {
 
     @Test
     void updateItem() {
-        String itemId1 = itemRepository.getItemMap().values().stream().filter(item -> item.getName().equals("item1")).findFirst().get().getId();
-        given()
+        Item item = itemRepository.save(itemMapper.mapToItem(requestBody));
+        UpdateItemDto updateItem = new UpdateItemDto("updated", "", 4, 5);
+        ItemDto result= given ()
                 .baseUri("http://localhost")
                 .port(port)
                 .header("Content-type", "application/json")
@@ -57,25 +67,28 @@ class ItemControllerTest {
                 .preemptive()
                 .basic("admin@eurder.com", "password")
                 .header("Accept", ContentType.JSON.getAcceptHeader())
-                .body(requestBody)
+                .body(updateItem)
                 .when()
-                .patch("/items/"+itemId1)
+                .patch("/items/" + item.getId())
                 .then()
                 .assertThat()
                 .statusCode(HttpStatus.CREATED.value())
-                ;
+                .extract()
+                .as(ItemDto.class);
+        Assertions.assertThat(result.getName()).isEqualTo(updateItem.getName());
+        Assertions.assertThat(result.getPrice()).isEqualTo(updateItem.getPrice());
     }
 
     @Test
     void addItem_whenItemNameIsBlank_ThenThrowsException() {
         String requestBody = """
-            {
-              "name": "",
-              "description": "string",
-              "price": 5.2,
-              "amount": 7
-            }
-            """;
+                {
+                  "name": "",
+                  "description": "string",
+                  "price": 5.2,
+                  "amount": 7
+                }
+                """;
         given()
                 .baseUri("http://localhost")
                 .port(port)
@@ -109,7 +122,6 @@ class ItemControllerTest {
                 .get("/items")
                 .then()
                 .assertThat()
-                .statusCode(HttpStatus.OK.value())
-                .extract();
+                .statusCode(HttpStatus.OK.value());
     }
 }
