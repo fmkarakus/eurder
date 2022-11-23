@@ -1,9 +1,7 @@
 package com.switchfully.eurder.service.user;
 
-import com.switchfully.eurder.service.user.orderDto.CreateItemGroupDto;
-import com.switchfully.eurder.service.user.orderDto.ShowAllOrdersDto;
-import com.switchfully.eurder.service.user.orderDto.ShowItemGroupDto;
-import com.switchfully.eurder.service.user.orderDto.ShowOrderDto;
+import com.switchfully.eurder.domain.users.Person;
+import com.switchfully.eurder.service.user.orderDto.*;
 import com.switchfully.eurder.domain.order.ItemGroup;
 import com.switchfully.eurder.domain.order.Order;
 import com.switchfully.eurder.service.item.ItemService;
@@ -18,8 +16,10 @@ import java.util.stream.Collectors;
 public class OrderMapper {
     private final ItemService itemService;
 
+
     public OrderMapper(ItemService itemService) {
         this.itemService = itemService;
+
     }
 
 
@@ -49,5 +49,9 @@ public class OrderMapper {
 
     public ShowAllOrdersDto mapToShowAllOrders(List<Order> orders) {
         return new ShowAllOrdersDto(orders.stream().map(this::mapToShowOrderDto).collect(Collectors.toList()), orders.stream().mapToDouble(Order::getTotalPrice).sum());
+    }
+
+    public TodaysOrderDto mapToTodaysOrderDto(ItemGroup itemGroup, Person customer) {
+        return new TodaysOrderDto(itemGroup.getId(), itemGroup.getAmount(), customer.getAddress());
     }
 }

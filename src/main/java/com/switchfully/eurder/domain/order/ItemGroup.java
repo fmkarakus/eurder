@@ -33,6 +33,9 @@ public class ItemGroup {
 
     }
 
+    public long getId() {
+        return id;
+    }
 
     public Item getItem() {
         return item;
