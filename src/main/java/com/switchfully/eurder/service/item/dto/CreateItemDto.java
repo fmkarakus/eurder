@@ -1,4 +1,4 @@
-package com.switchfully.eurder.api.dtos;
+package com.switchfully.eurder.service.item.dto;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;

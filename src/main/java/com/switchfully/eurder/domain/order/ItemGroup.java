@@ -1,4 +1,6 @@
-package com.switchfully.eurder.domain;
+package com.switchfully.eurder.domain.order;
+
+import com.switchfully.eurder.domain.item.Item;
 
 import javax.persistence.*;
 import java.time.LocalDate;

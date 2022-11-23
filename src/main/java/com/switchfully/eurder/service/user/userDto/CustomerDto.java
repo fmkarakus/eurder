@@ -1,4 +1,4 @@
-package com.switchfully.eurder.api.dtos;
+package com.switchfully.eurder.service.user.userDto;
 
 import com.switchfully.eurder.domain.users.Address;
 import com.switchfully.eurder.domain.users.Role;

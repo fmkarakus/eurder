@@ -1,5 +1,6 @@
-package com.switchfully.eurder.domain;
+package com.switchfully.eurder.domain.order;
 
+import com.switchfully.eurder.domain.order.ItemGroup;
 import com.switchfully.eurder.domain.users.Person;
 
 import javax.persistence.*;

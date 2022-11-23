@@ -1,9 +1,13 @@
 package com.switchfully.eurder.api;
 
-import com.switchfully.eurder.api.dtos.*;
-import com.switchfully.eurder.api.mappers.UserMapper;
-import com.switchfully.eurder.domain.Item;
+import com.switchfully.eurder.service.user.UserMapper;
+import com.switchfully.eurder.domain.item.Item;
+import com.switchfully.eurder.service.user.orderDto.CreateItemGroupDto;
+import com.switchfully.eurder.service.user.orderDto.ShowOrderDto;
 import com.switchfully.eurder.domain.users.Person;
+import com.switchfully.eurder.service.user.userDto.CreateCustomerDto;
+import com.switchfully.eurder.service.user.userDto.CustomerDto;
+import com.switchfully.eurder.service.user.userDto.ShowUserDto;
 import com.switchfully.eurder.repositories.ItemRepository;
 import com.switchfully.eurder.repositories.PersonRepository;
 import org.assertj.core.api.Assertions;

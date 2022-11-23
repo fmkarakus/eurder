@@ -1,5 +1,6 @@
-package com.switchfully.eurder.api.dtos;
+package com.switchfully.eurder.service.user.userDto;
 
+import com.switchfully.eurder.service.user.orderDto.ShowOrderDto;
 import com.switchfully.eurder.domain.users.Address;
 
 import java.util.List;

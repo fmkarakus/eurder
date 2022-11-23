@@ -1,4 +1,4 @@
-package com.switchfully.eurder.service;
+package com.switchfully.eurder.service.security;
 
 import com.switchfully.eurder.domain.users.Feature;
 import com.switchfully.eurder.domain.users.Person;

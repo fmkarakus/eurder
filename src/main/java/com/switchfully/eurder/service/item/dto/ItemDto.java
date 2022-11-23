@@ -1,4 +1,4 @@
-package com.switchfully.eurder.api.dtos;
+package com.switchfully.eurder.service.item.dto;
 
 public class ItemDto {
     private final long id;

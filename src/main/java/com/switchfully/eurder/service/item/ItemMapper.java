@@ -1,9 +1,9 @@
-package com.switchfully.eurder.api.mappers;
+package com.switchfully.eurder.service.item;
 
-import com.switchfully.eurder.api.dtos.CreateItemDto;
-import com.switchfully.eurder.api.dtos.ItemDto;
-import com.switchfully.eurder.api.dtos.UpdateItemDto;
-import com.switchfully.eurder.domain.Item;
+import com.switchfully.eurder.service.item.dto.CreateItemDto;
+import com.switchfully.eurder.service.item.dto.ItemDto;
+import com.switchfully.eurder.service.item.dto.UpdateItemDto;
+import com.switchfully.eurder.domain.item.Item;
 import org.springframework.stereotype.Component;
 
 

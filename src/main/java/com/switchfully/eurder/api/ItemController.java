@@ -1,9 +1,9 @@
 package com.switchfully.eurder.api;
 
-import com.switchfully.eurder.api.dtos.CreateItemDto;
-import com.switchfully.eurder.api.dtos.ItemDto;
-import com.switchfully.eurder.api.dtos.UpdateItemDto;
-import com.switchfully.eurder.service.ItemService;
+import com.switchfully.eurder.service.item.dto.CreateItemDto;
+import com.switchfully.eurder.service.item.dto.ItemDto;
+import com.switchfully.eurder.service.item.dto.UpdateItemDto;
+import com.switchfully.eurder.service.item.ItemService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;

@@ -1,10 +1,10 @@
 package com.switchfully.eurder.api;
 
-import com.switchfully.eurder.api.dtos.CreateItemDto;
-import com.switchfully.eurder.api.dtos.ItemDto;
-import com.switchfully.eurder.api.dtos.UpdateItemDto;
-import com.switchfully.eurder.api.mappers.ItemMapper;
-import com.switchfully.eurder.domain.Item;
+import com.switchfully.eurder.service.item.dto.CreateItemDto;
+import com.switchfully.eurder.service.item.dto.ItemDto;
+import com.switchfully.eurder.service.item.dto.UpdateItemDto;
+import com.switchfully.eurder.service.item.ItemMapper;
+import com.switchfully.eurder.domain.item.Item;
 import com.switchfully.eurder.repositories.ItemRepository;
 import io.restassured.http.ContentType;
 import org.assertj.core.api.Assertions;
@@ -17,7 +17,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.DirtiesContext;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.equalTo;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)

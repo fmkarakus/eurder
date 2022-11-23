@@ -1,12 +1,12 @@
-package com.switchfully.eurder.api.mappers;
+package com.switchfully.eurder.service.user;
 
-import com.switchfully.eurder.api.dtos.CreateItemGroupDto;
-import com.switchfully.eurder.api.dtos.ShowAllOrdersDto;
-import com.switchfully.eurder.api.dtos.ShowItemGroupDto;
-import com.switchfully.eurder.api.dtos.ShowOrderDto;
-import com.switchfully.eurder.domain.ItemGroup;
-import com.switchfully.eurder.domain.Order;
-import com.switchfully.eurder.service.ItemService;
+import com.switchfully.eurder.service.user.orderDto.CreateItemGroupDto;
+import com.switchfully.eurder.service.user.orderDto.ShowAllOrdersDto;
+import com.switchfully.eurder.service.user.orderDto.ShowItemGroupDto;
+import com.switchfully.eurder.service.user.orderDto.ShowOrderDto;
+import com.switchfully.eurder.domain.order.ItemGroup;
+import com.switchfully.eurder.domain.order.Order;
+import com.switchfully.eurder.service.item.ItemService;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;

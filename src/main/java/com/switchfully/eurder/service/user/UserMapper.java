@@ -1,9 +1,10 @@
-package com.switchfully.eurder.api.mappers;
+package com.switchfully.eurder.service.user;
 
-import com.switchfully.eurder.api.dtos.CreateCustomerDto;
-import com.switchfully.eurder.api.dtos.CustomerDto;
-import com.switchfully.eurder.api.dtos.ShowOrderDto;
-import com.switchfully.eurder.api.dtos.ShowUserDto;
+import com.switchfully.eurder.service.user.OrderMapper;
+import com.switchfully.eurder.service.user.userDto.CreateCustomerDto;
+import com.switchfully.eurder.service.user.userDto.CustomerDto;
+import com.switchfully.eurder.service.user.orderDto.ShowOrderDto;
+import com.switchfully.eurder.service.user.userDto.ShowUserDto;
 import com.switchfully.eurder.domain.users.Address;
 import com.switchfully.eurder.domain.users.Person;
 import com.switchfully.eurder.domain.users.PostalCode;

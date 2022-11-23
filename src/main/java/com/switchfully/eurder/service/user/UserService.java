@@ -1,14 +1,19 @@
-package com.switchfully.eurder.service;
+package com.switchfully.eurder.service.user;
 
-import com.switchfully.eurder.api.dtos.*;
-import com.switchfully.eurder.api.mappers.OrderMapper;
-import com.switchfully.eurder.api.mappers.UserMapper;
-import com.switchfully.eurder.domain.ItemGroup;
-import com.switchfully.eurder.domain.Order;
+import com.switchfully.eurder.domain.order.ItemGroup;
+import com.switchfully.eurder.domain.order.Order;
+import com.switchfully.eurder.service.user.orderDto.CreateItemGroupDto;
+import com.switchfully.eurder.service.user.orderDto.ShowAllOrdersDto;
+import com.switchfully.eurder.service.user.orderDto.ShowOrderDto;
 import com.switchfully.eurder.domain.users.Feature;
 import com.switchfully.eurder.domain.users.Person;
+import com.switchfully.eurder.service.user.userDto.CreateCustomerDto;
+import com.switchfully.eurder.service.user.userDto.CustomerDto;
+import com.switchfully.eurder.service.user.userDto.ShowUserDto;
 import com.switchfully.eurder.repositories.OrderRepository;
 import com.switchfully.eurder.repositories.PersonRepository;
+import com.switchfully.eurder.service.item.ItemService;
+import com.switchfully.eurder.service.security.SecurityService;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -19,7 +24,6 @@ import java.util.stream.Collectors;
 @Service
 public class UserService {
     private final SecurityService securityService;
-//    private final UserRepository userRepository;
     private final ItemService itemService;
     private final UserMapper userMapper;
     private final OrderMapper orderMapper;
