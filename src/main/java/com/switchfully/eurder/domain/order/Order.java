@@ -4,6 +4,7 @@ import com.switchfully.eurder.domain.order.ItemGroup;
 import com.switchfully.eurder.domain.users.Person;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -50,5 +51,9 @@ public class Order {
     public double getTotalPrice() {
         return totalPrice;
     }
+    //for testing purposes
+//    public void setShippingDate(LocalDate newDate){
+//        itemGroupList.forEach(itemGroup -> itemGroup.setShippingDate(newDate));
+//    }
 
 }

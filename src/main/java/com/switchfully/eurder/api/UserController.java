@@ -5,7 +5,6 @@ import com.switchfully.eurder.service.security.SecurityService;
 import com.switchfully.eurder.service.user.orderDto.CreateItemGroupDto;
 import com.switchfully.eurder.service.user.orderDto.ShowAllOrdersDto;
 import com.switchfully.eurder.service.user.orderDto.ShowOrderDto;
-import com.switchfully.eurder.service.user.orderDto.TodaysOrderDto;
 import com.switchfully.eurder.service.user.userDto.CreateCustomerDto;
 import com.switchfully.eurder.service.user.userDto.CustomerDto;
 import com.switchfully.eurder.service.user.userDto.ShowUserDto;
@@ -62,9 +61,9 @@ public class UserController {
         return userService.getCustomerOrders(customerId);
     }
     @PostMapping(path = "{customerId}/orders/{orderId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.CREATED)
     public ShowOrderDto reOrder(@RequestHeader String authorization, @PathVariable long customerId,@PathVariable long orderId) {
         securityService.validateAuthorization(authorization, Feature.ORDER);
-        return userService.reOrder(customerId,orderId);
+        return userService.reorder(customerId,orderId);
     }
 }

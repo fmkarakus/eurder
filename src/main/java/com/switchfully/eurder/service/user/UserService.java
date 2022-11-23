@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -68,7 +67,7 @@ public class UserService {
         return personRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("There is no customer with the id " + userId + "."));
     }
 
-    private Order getOrderById(long orderId) {
+    public Order getOrderById(long orderId) {
         return orderRepository.findById(orderId).orElseThrow(() -> new IllegalArgumentException("There is no order with the id " + orderId + "."));
     }
 
@@ -96,7 +95,11 @@ public class UserService {
     }
 
     public List<TodaysOrderDto> getTodaysOrders() {
-        List<ItemGroup> itemGroups = itemGroupRepository.findAllByShippingDate(LocalDate.now());
+        return getOrdersOfTheDay(LocalDate.now());
+    }
+
+    public List<TodaysOrderDto> getOrdersOfTheDay(LocalDate date) {
+        List<ItemGroup> itemGroups = itemGroupRepository.findAllByShippingDate(date);
         List<TodaysOrderDto> todaysOrderDto = new ArrayList<>();
         itemGroups.forEach(itemGroup -> {
             Order order = getOrderById(itemGroup.getId());
@@ -106,7 +109,7 @@ public class UserService {
         return todaysOrderDto;
     }
 
-    public ShowOrderDto reOrder(long customerId, long orderId) {
+    public ShowOrderDto reorder(long customerId, long orderId) {
         Order order = getOrderById(orderId);
         assertCustomerIsAuthorized(customerId, order);
         List<CreateItemGroupDto> newOrders = order.getItemGroupList().stream()
@@ -117,4 +120,9 @@ public class UserService {
     private static void assertCustomerIsAuthorized(long customerId, Order order) {
         if (!(customerId == order.getCustomer().getId())) throw new UnauthorizatedException();
     }
+
+    //for test purposes
+//    public void setShippingDate(long orderId, LocalDate newDate) {
+//        getOrderById(orderId).setShippingDate(newDate);
+//    }
 }

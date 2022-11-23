@@ -57,4 +57,8 @@ public class ItemGroup {
         item.decreaseStock(amount);
         return amount;
     }
+//for testing purposes
+//    public void setShippingDate(LocalDate shippingDate) {
+//        this.shippingDate = shippingDate;
+//    }
 }

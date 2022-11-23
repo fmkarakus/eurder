@@ -2,6 +2,7 @@ package com.switchfully.eurder.api;
 
 import com.switchfully.eurder.service.user.UserMapper;
 import com.switchfully.eurder.domain.item.Item;
+import com.switchfully.eurder.service.user.UserService;
 import com.switchfully.eurder.service.user.orderDto.CreateItemGroupDto;
 import com.switchfully.eurder.service.user.orderDto.ShowOrderDto;
 import com.switchfully.eurder.domain.users.Person;
@@ -19,6 +20,10 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.DirtiesContext;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 
@@ -32,6 +37,8 @@ class PersonControllerTest {
     private UserMapper userMapper;
     @Autowired
     private ItemRepository itemRepository;
+    @Autowired
+    private UserService userService;
     @LocalServerPort
     private int port;
 
@@ -241,5 +248,35 @@ class PersonControllerTest {
                 .assertThat()
                 .statusCode(HttpStatus.OK.value())
                 .extract();
+    }
+
+    @Test
+    void reOrder() {
+        CreateCustomerDto createCustomerDto = new CreateCustomerDto("fname", "lname", "customer@test.be", "string", "65", "3500", "Hasselt", "04653122246", "password");
+        Person person = personRepository.save(userMapper.mapToUser(createCustomerDto));
+        long itemId1 = (itemRepository.save(new Item("item1", "desc", 2.5, 5))).getId();
+        long itemId2 = (itemRepository.save(new Item("item2", "desc", 2.5, 5))).getId();
+        List<CreateItemGroupDto> orders = new ArrayList<>(Arrays.asList(new CreateItemGroupDto(itemId1, 2), new CreateItemGroupDto(itemId2, 2)));
+        ShowOrderDto orderDto=userService.addOrder(person.getId(), orders);
+        ShowOrderDto result=
+                given()
+                        .baseUri("http://localhost")
+                        .port(port)
+                        .auth()
+                        .preemptive()
+                        .basic("customer@test.be", "password")
+                        .header("Accept", "application/json")
+                        .header("Content-type", "application/json")
+                        .and()
+                        .when()
+                        .post("/customers/" + person.getId() + "/orders/"+orderDto.getOrderId())
+                        .then()
+                        .assertThat()
+                        .statusCode(HttpStatus.CREATED.value())
+                        .extract()
+                        .as(ShowOrderDto.class);
+        Assertions.assertThat(result.getOrderId()).isEqualTo(orderDto.getOrderId()+1);
+
+
     }
 }
