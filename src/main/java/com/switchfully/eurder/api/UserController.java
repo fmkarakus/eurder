@@ -36,7 +36,7 @@ public class UserController {
 
     @PostMapping(path = "{userId}/order", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public ShowOrderDto createOrder(@PathVariable long userId, @RequestHeader String authorization, @Valid @RequestBody CreateItemGroupDto[] newOrders) {
+    public ShowOrderDto createOrder(@PathVariable long userId, @RequestHeader String authorization, @Valid @RequestBody List<CreateItemGroupDto> newOrders) {
         securityService.validateAuthorization(authorization, Feature.ORDER);
         return userService.addOrder(userId, newOrders);
     }
@@ -61,5 +61,10 @@ public class UserController {
         securityService.validateAuthorization(authorization, Feature.ORDER);
         return userService.getCustomerOrders(customerId);
     }
-
+    @PostMapping(path = "{customerId}/orders/{orderId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    public ShowOrderDto reOrder(@RequestHeader String authorization, @PathVariable long customerId,@PathVariable long orderId) {
+        securityService.validateAuthorization(authorization, Feature.ORDER);
+        return userService.reOrder(customerId,orderId);
+    }
 }

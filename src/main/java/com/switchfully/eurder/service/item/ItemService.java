@@ -7,10 +7,12 @@ import com.switchfully.eurder.domain.item.Item;
 import com.switchfully.eurder.repositories.ItemRepository;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class ItemService {
     private final ItemRepository itemRepository;
     private final ItemMapper itemMapper;

@@ -3,6 +3,7 @@ package com.switchfully.eurder.service.user;
 import com.switchfully.eurder.domain.order.ItemGroup;
 import com.switchfully.eurder.domain.order.Order;
 import com.switchfully.eurder.repositories.ItemGroupRepository;
+import com.switchfully.eurder.service.exceptions.UnauthorizatedException;
 import com.switchfully.eurder.service.user.orderDto.CreateItemGroupDto;
 import com.switchfully.eurder.service.user.orderDto.ShowAllOrdersDto;
 import com.switchfully.eurder.service.user.orderDto.ShowOrderDto;
@@ -16,6 +17,7 @@ import com.switchfully.eurder.repositories.PersonRepository;
 import com.switchfully.eurder.service.item.ItemService;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,6 +25,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class UserService {
     private final ItemService itemService;
     private final UserMapper userMapper;
@@ -44,14 +47,14 @@ public class UserService {
     public CustomerDto addCustomer(CreateCustomerDto newCustomer) {
         if (personRepository.findByEmail(newCustomer.geteMail()).isPresent())
             throw new IllegalArgumentException("This email address is already in use.");
-        Person newPerson=personRepository.save(userMapper.mapToUser(newCustomer));
+        Person newPerson = personRepository.save(userMapper.mapToUser(newCustomer));
         return userMapper.mapToCustomeDto(newPerson);
     }
 
-    public ShowOrderDto addOrder(long userId,CreateItemGroupDto[] newOrders) {
-        Person customer= getCustomerById(userId);
+    public ShowOrderDto addOrder(long userId, List<CreateItemGroupDto> newOrders) {
+        Person customer = getCustomerById(userId);
         List<ItemGroup> itemGroupList = new ArrayList<>();
-        Arrays.stream(newOrders).forEach(itemGroupDto -> {
+        newOrders.forEach(itemGroupDto -> {
             assertItemExits(itemGroupDto.getItemId());
             ItemGroup itemGroup = orderMapper.mapToItemGroup(itemGroupDto);
             itemGroupList.add(itemGroup);
@@ -65,7 +68,7 @@ public class UserService {
         return personRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("There is no customer with the id " + userId + "."));
     }
 
-    private Order getOrderById(long orderId){
+    private Order getOrderById(long orderId) {
         return orderRepository.findById(orderId).orElseThrow(() -> new IllegalArgumentException("There is no order with the id " + orderId + "."));
     }
 
@@ -76,7 +79,7 @@ public class UserService {
     }
 
     public ShowUserDto getCustomer(long customerId) {
-        Person customer= getCustomerById(customerId);
+        Person customer = getCustomerById(customerId);
         return userMapper.maptoShowUserDto(customer);
     }
 
@@ -87,19 +90,31 @@ public class UserService {
 
 
     public ShowAllOrdersDto getCustomerOrders(long customerId) {
-        Person customer= getCustomerById(customerId);
+        Person customer = getCustomerById(customerId);
         List<Order> allOrdersOfCustomer = orderRepository.findAllByCustomer(customer);
         return orderMapper.mapToShowAllOrders(allOrdersOfCustomer);
     }
 
     public List<TodaysOrderDto> getTodaysOrders() {
-        List<ItemGroup> itemGroups=itemGroupRepository.findAllByShippingDate(LocalDate.now());
-        List<TodaysOrderDto> todaysOrderDto=new ArrayList<>();
+        List<ItemGroup> itemGroups = itemGroupRepository.findAllByShippingDate(LocalDate.now());
+        List<TodaysOrderDto> todaysOrderDto = new ArrayList<>();
         itemGroups.forEach(itemGroup -> {
-                Order order=getOrderById(itemGroup.getId());
-                Person customer=getCustomerById(order.getCustomer().getId());
-                todaysOrderDto.add(orderMapper.mapToTodaysOrderDto(itemGroup,customer));
+            Order order = getOrderById(itemGroup.getId());
+            Person customer = getCustomerById(order.getCustomer().getId());
+            todaysOrderDto.add(orderMapper.mapToTodaysOrderDto(itemGroup, customer));
         });
         return todaysOrderDto;
+    }
+
+    public ShowOrderDto reOrder(long customerId, long orderId) {
+        Order order = getOrderById(orderId);
+        assertCustomerIsAuthorized(customerId, order);
+        List<CreateItemGroupDto> newOrders = order.getItemGroupList().stream()
+                .map(orderMapper::mapToCreateItemGroupDto).toList();
+        return addOrder(customerId, newOrders);
+    }
+
+    private static void assertCustomerIsAuthorized(long customerId, Order order) {
+        if (!(customerId == order.getCustomer().getId())) throw new UnauthorizatedException();
     }
 }

@@ -54,4 +54,8 @@ public class OrderMapper {
     public TodaysOrderDto mapToTodaysOrderDto(ItemGroup itemGroup, Person customer) {
         return new TodaysOrderDto(itemGroup.getId(), itemGroup.getAmount(), customer.getAddress());
     }
+
+    public CreateItemGroupDto mapToCreateItemGroupDto(ItemGroup itemGroup) {
+        return new CreateItemGroupDto(itemGroup.getItem().getId(), itemGroup.getAmount());
+    }
 }
