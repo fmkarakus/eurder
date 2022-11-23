@@ -3,7 +3,7 @@ package com.switchfully.eurder.api;
 import com.switchfully.eurder.domain.users.Feature;
 import com.switchfully.eurder.service.security.SecurityService;
 import com.switchfully.eurder.service.user.UserService;
-import com.switchfully.eurder.service.user.orderDto.TodaysOrderDto;
+import com.switchfully.eurder.service.user.orderDto.OrderOfTheDayDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +24,7 @@ public class ReportController {
 
     @GetMapping(path = "todaysOrders", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public List<TodaysOrderDto> getOrdersOfToday(@RequestHeader String authorization) {
+    public List<OrderOfTheDayDto> getOrdersOfToday(@RequestHeader String authorization) {
         securityService.validateAuthorization(authorization, Feature.VIEW_TODAYS_ORDERS);
         return userService.getTodaysOrders();
     }

@@ -18,12 +18,17 @@ public class Item {
     private double price;
     @Column(name="amount")
     private int amount;
+    @Transient
+    private StockStatus stockStatus;
+
+
 
     public Item(String name, String description, double price, int amount) {
         this.price = price;
         this.name = name;
         this.description = description;
         this.amount = amount;
+        setStockStatus();
     }
 
     public Item() {
@@ -52,9 +57,11 @@ public class Item {
 
     public void decreaseStock(int amount) {
         this.amount -= amount;
+        setStockStatus();
     }
     public void increaseStock(int amount) {
         this.amount += amount;
+        setStockStatus();
     }
     public void setName(String name) {
         this.name = name;
@@ -72,6 +79,21 @@ public class Item {
             setDescription(updateItem.getDescription());
         if (updateItem.getPrice() > 0) setPrice(updateItem.getPrice());
         if (updateItem.getAmount() > 0) increaseStock(updateItem.getAmount());
+        setStockStatus();
         return this;
+    }
+
+    public StockStatus getStockStatus() {
+        return stockStatus;
+    }
+
+    public void setStockStatus() {
+        this.stockStatus = identifyStockStatus(amount);
+    }
+
+    public StockStatus identifyStockStatus(int amount) {
+        if(amount>=10) return StockStatus.STOCK_HIGH;
+        if(amount>=5) return StockStatus.STOCK_MEDIUM;
+        return StockStatus.STOCK_LOW;
     }
 }

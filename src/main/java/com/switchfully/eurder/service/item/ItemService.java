@@ -1,13 +1,16 @@
 package com.switchfully.eurder.service.item;
 
+import com.switchfully.eurder.domain.item.StockStatus;
 import com.switchfully.eurder.service.item.dto.CreateItemDto;
 import com.switchfully.eurder.service.item.dto.ItemDto;
+import com.switchfully.eurder.service.item.dto.StockDto;
 import com.switchfully.eurder.service.item.dto.UpdateItemDto;
 import com.switchfully.eurder.domain.item.Item;
 import com.switchfully.eurder.repositories.ItemRepository;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -47,4 +50,23 @@ public class ItemService {
     }
 
 
+    public List<StockDto> getStockStatus() {
+        List<Item> allItems = itemRepository.findAll();
+        allItems.forEach(Item::setStockStatus);
+        return getStockDtos(allItems);
+    }
+
+    private List<StockDto> getStockDtos(List<Item> allItems) {
+        return allItems.stream()
+                .sorted(Comparator.comparingInt(Item::getAmount))
+                .map(itemMapper::mapToStockDto)
+                .toList();
+    }
+
+    public List<StockDto> getStockStatusFilteredBy(StockStatus status) {
+        if(status==null) return getStockStatus();
+        List<Item> allItems = itemRepository.findAll();
+        allItems.forEach(Item::setStockStatus);
+        return getStockDtos(allItems.stream().filter(item -> item.getStockStatus().equals(status)).collect(Collectors.toList()));
+    }
 }

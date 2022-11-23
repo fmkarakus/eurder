@@ -1,7 +1,9 @@
 package com.switchfully.eurder.api;
 
+import com.switchfully.eurder.domain.item.StockStatus;
 import com.switchfully.eurder.service.item.dto.CreateItemDto;
 import com.switchfully.eurder.service.item.dto.ItemDto;
+import com.switchfully.eurder.service.item.dto.StockDto;
 import com.switchfully.eurder.service.item.dto.UpdateItemDto;
 import com.switchfully.eurder.service.item.ItemMapper;
 import com.switchfully.eurder.domain.item.Item;
@@ -97,7 +99,6 @@ class ItemControllerTest {
                 .assertThat()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
-
     @Test
     void viewAllItems() {
         itemRepository.save(itemMapper.mapToItem(requestBody));
@@ -118,4 +119,47 @@ class ItemControllerTest {
                 extract().as(ItemDto[].class);
         Assertions.assertThat(result.length).isEqualTo(1);
     }
+    @Test
+    void viewItemOverview() {
+        itemRepository.save(itemMapper.mapToItem(requestBody));
+        StockDto[] result = given()
+                .baseUri("http://localhost")
+                .port(port)
+                .auth()
+                .preemptive()
+                .basic("admin@eurder.com", "password")
+                .header("Accept", "application/json")
+                .header("Content-type", "application/json")
+                .and()
+                .when()
+                .get("/items/stock")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.OK.value()).
+                extract().as(StockDto[].class);
+        Assertions.assertThat(result[0].stockStatus()).isEqualTo(StockStatus.STOCK_MEDIUM);
+    }
+
+    @Test
+    void viewItemOverview_whenFiltered() {
+        itemRepository.save(itemMapper.mapToItem(requestBody));
+        StockDto[] result = given()
+                .baseUri("http://localhost")
+                .port(port)
+                .auth()
+                .preemptive()
+                .basic("admin@eurder.com", "password")
+                .header("Accept", "application/json")
+                .header("Content-type", "application/json")
+                .and()
+                .when()
+                .param("status","STOCK_MEDIUM")
+                .get("/items/stock")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.OK.value()).
+                extract().as(StockDto[].class);
+        Assertions.assertThat(result[0].stockStatus()).isEqualTo(StockStatus.STOCK_MEDIUM);
+    }
+
 }

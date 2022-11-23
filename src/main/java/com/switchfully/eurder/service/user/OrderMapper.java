@@ -51,8 +51,8 @@ public class OrderMapper {
         return new ShowAllOrdersDto(orders.stream().map(this::mapToShowOrderDto).collect(Collectors.toList()), orders.stream().mapToDouble(Order::getTotalPrice).sum());
     }
 
-    public TodaysOrderDto mapToTodaysOrderDto(ItemGroup itemGroup, Person customer) {
-        return new TodaysOrderDto(itemGroup.getId(), itemGroup.getAmount(), customer.getAddress());
+    public OrderOfTheDayDto mapToOrderOfTheDayDto(ItemGroup itemGroup, Person customer) {
+        return new OrderOfTheDayDto(itemGroup.getId(), itemGroup.getAmount(), customer.getAddress());
     }
 
     public CreateItemGroupDto mapToCreateItemGroupDto(ItemGroup itemGroup) {

@@ -5,7 +5,7 @@ import java.util.List;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.switchfully.eurder.domain.users.Feature.*;
 public enum Role {
-    ADMIN(newArrayList(ADD_NEW_ITEM,ORDER,GET_ALL_ITEMS,VIEW_USERS,UPDATE_ITEMS,VIEW_TODAYS_ORDERS)),
+    ADMIN(newArrayList(ADD_NEW_ITEM,ORDER,GET_ALL_ITEMS,VIEW_USERS,UPDATE_ITEMS,VIEW_TODAYS_ORDERS,VIEW_STOCK_STATUS)),
     CUSTOMER(newArrayList(ORDER,GET_ALL_ITEMS));
     private final List<Feature> featureList;
 

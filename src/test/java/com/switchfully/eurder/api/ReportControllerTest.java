@@ -7,10 +7,7 @@ import com.switchfully.eurder.repositories.PersonRepository;
 import com.switchfully.eurder.service.user.UserMapper;
 import com.switchfully.eurder.service.user.UserService;
 import com.switchfully.eurder.service.user.orderDto.CreateItemGroupDto;
-import com.switchfully.eurder.service.user.orderDto.ShowOrderDto;
-import com.switchfully.eurder.service.user.orderDto.TodaysOrderDto;
 import com.switchfully.eurder.service.user.userDto.CreateCustomerDto;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -19,16 +16,11 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.DirtiesContext;
 
-import java.time.Clock;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)

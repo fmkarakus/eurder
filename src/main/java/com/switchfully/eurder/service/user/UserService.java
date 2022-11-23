@@ -8,7 +8,7 @@ import com.switchfully.eurder.service.user.orderDto.CreateItemGroupDto;
 import com.switchfully.eurder.service.user.orderDto.ShowAllOrdersDto;
 import com.switchfully.eurder.service.user.orderDto.ShowOrderDto;
 import com.switchfully.eurder.domain.users.Person;
-import com.switchfully.eurder.service.user.orderDto.TodaysOrderDto;
+import com.switchfully.eurder.service.user.orderDto.OrderOfTheDayDto;
 import com.switchfully.eurder.service.user.userDto.CreateCustomerDto;
 import com.switchfully.eurder.service.user.userDto.CustomerDto;
 import com.switchfully.eurder.service.user.userDto.ShowUserDto;
@@ -94,19 +94,19 @@ public class UserService {
         return orderMapper.mapToShowAllOrders(allOrdersOfCustomer);
     }
 
-    public List<TodaysOrderDto> getTodaysOrders() {
+    public List<OrderOfTheDayDto> getTodaysOrders() {
         return getOrdersOfTheDay(LocalDate.now());
     }
 
-    public List<TodaysOrderDto> getOrdersOfTheDay(LocalDate date) {
+    public List<OrderOfTheDayDto> getOrdersOfTheDay(LocalDate date) {
         List<ItemGroup> itemGroups = itemGroupRepository.findAllByShippingDate(date);
-        List<TodaysOrderDto> todaysOrderDto = new ArrayList<>();
+        List<OrderOfTheDayDto> ordersOfTheDayDto = new ArrayList<>();
         itemGroups.forEach(itemGroup -> {
             Order order = getOrderById(itemGroup.getId());
             Person customer = getCustomerById(order.getCustomer().getId());
-            todaysOrderDto.add(orderMapper.mapToTodaysOrderDto(itemGroup, customer));
+            ordersOfTheDayDto.add(orderMapper.mapToOrderOfTheDayDto(itemGroup, customer));
         });
-        return todaysOrderDto;
+        return ordersOfTheDayDto;
     }
 
     public ShowOrderDto reorder(long customerId, long orderId) {
