@@ -5,7 +5,6 @@ import com.switchfully.eurder.domain.order.Order;
 import com.switchfully.eurder.service.user.orderDto.CreateItemGroupDto;
 import com.switchfully.eurder.service.user.orderDto.ShowAllOrdersDto;
 import com.switchfully.eurder.service.user.orderDto.ShowOrderDto;
-import com.switchfully.eurder.domain.users.Feature;
 import com.switchfully.eurder.domain.users.Person;
 import com.switchfully.eurder.service.user.userDto.CreateCustomerDto;
 import com.switchfully.eurder.service.user.userDto.CustomerDto;
@@ -13,7 +12,6 @@ import com.switchfully.eurder.service.user.userDto.ShowUserDto;
 import com.switchfully.eurder.repositories.OrderRepository;
 import com.switchfully.eurder.repositories.PersonRepository;
 import com.switchfully.eurder.service.item.ItemService;
-import com.switchfully.eurder.service.security.SecurityService;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -23,15 +21,13 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserService {
-    private final SecurityService securityService;
     private final ItemService itemService;
     private final UserMapper userMapper;
     private final OrderMapper orderMapper;
     private final OrderRepository orderRepository;
     private final PersonRepository personRepository;
 
-    public UserService(SecurityService securityService, ItemService itemService, UserMapper userMapper, OrderMapper orderMapper, OrderRepository orderRepository, PersonRepository personRepository) {
-        this.securityService = securityService;
+    public UserService(ItemService itemService, UserMapper userMapper, OrderMapper orderMapper, OrderRepository orderRepository, PersonRepository personRepository) {
         this.itemService = itemService;
         this.userMapper = userMapper;
         this.orderMapper = orderMapper;
@@ -47,8 +43,7 @@ public class UserService {
         return userMapper.mapToCustomeDto(newPerson);
     }
 
-    public ShowOrderDto addOrder(long userId, String authorization, CreateItemGroupDto[] newOrders) {
-        securityService.validateAuthorization(authorization, Feature.ORDER);
+    public ShowOrderDto addOrder(long userId,CreateItemGroupDto[] newOrders) {
         Person customer= getCustomerById(userId);
         List<ItemGroup> itemGroupList = new ArrayList<>();
         Arrays.stream(newOrders).forEach(itemGroupDto -> {
@@ -65,15 +60,13 @@ public class UserService {
         return personRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("There is no customer with the id " + userId + "."));
     }
 
-    public List<CustomerDto> getAllUsers(String authorization) {
-        securityService.validateAuthorization(authorization, Feature.VIEW_USERS);
+    public List<CustomerDto> getAllUsers() {
         return personRepository.findAll().stream()
                 .map(userMapper::mapToCustomeDto)
                 .collect(Collectors.toList());
     }
 
-    public ShowUserDto getCustomer(String authorization, long customerId) {
-        securityService.validateAuthorization(authorization, Feature.VIEW_USERS);
+    public ShowUserDto getCustomer(long customerId) {
         Person customer= getCustomerById(customerId);
         return userMapper.maptoShowUserDto(customer);
     }
@@ -84,12 +77,10 @@ public class UserService {
     }
 
 
-    public ShowAllOrdersDto getCustomerOrders(String authorization, long customerId) {
-        securityService.validateAuthorization(authorization, Feature.ORDER);
+    public ShowAllOrdersDto getCustomerOrders(long customerId) {
         Person customer= getCustomerById(customerId);
         List<Order> allOrdersOfCustomer = orderRepository.findAllByCustomer(customer);
         return orderMapper.mapToShowAllOrders(allOrdersOfCustomer);
     }
-
 
 }

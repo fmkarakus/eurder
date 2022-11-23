@@ -1,5 +1,6 @@
 package com.switchfully.eurder.api;
 
+import com.switchfully.eurder.domain.users.Feature;
 import com.switchfully.eurder.service.security.SecurityService;
 import com.switchfully.eurder.service.user.orderDto.CreateItemGroupDto;
 import com.switchfully.eurder.service.user.orderDto.ShowAllOrdersDto;
@@ -35,24 +36,28 @@ public class UserController {
     @PostMapping(path = "{userId}/order", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public ShowOrderDto createOrder(@PathVariable long userId, @RequestHeader String authorization, @Valid @RequestBody CreateItemGroupDto[] newOrders) {
-        return userService.addOrder(userId, authorization, newOrders);
+        securityService.validateAuthorization(authorization, Feature.ORDER);
+        return userService.addOrder(userId, newOrders);
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public List<CustomerDto> getAllUsers(@RequestHeader String authorization) {
-        return userService.getAllUsers(authorization);
+        securityService.validateAuthorization(authorization, Feature.VIEW_USERS);
+        return userService.getAllUsers();
     }
 
     @GetMapping(path = "{customerId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public ShowUserDto getCustomer(@RequestHeader String authorization, @PathVariable long customerId) {
-        return userService.getCustomer(authorization, customerId);
+        securityService.validateAuthorization(authorization, Feature.VIEW_USERS);
+        return userService.getCustomer(customerId);
     }
 
     @GetMapping(path = "{customerId}/orders", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public ShowAllOrdersDto getCustomerOrders(@RequestHeader String authorization, @PathVariable long customerId) {
-        return userService.getCustomerOrders(authorization, customerId);
+        securityService.validateAuthorization(authorization, Feature.ORDER);
+        return userService.getCustomerOrders(customerId);
     }
 }
