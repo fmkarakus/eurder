@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.DirtiesContext;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.equalTo;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -59,7 +60,7 @@ class ItemControllerTest {
     void updateItem() {
         Item item = itemRepository.save(itemMapper.mapToItem(requestBody));
         UpdateItemDto updateItem = new UpdateItemDto("updated", "", 4, 5);
-        ItemDto result= given ()
+        ItemDto result = given()
                 .baseUri("http://localhost")
                 .port(port)
                 .header("Content-type", "application/json")
@@ -81,14 +82,7 @@ class ItemControllerTest {
 
     @Test
     void addItem_whenItemNameIsBlank_ThenThrowsException() {
-        String requestBody = """
-                {
-                  "name": "",
-                  "description": "string",
-                  "price": 5.2,
-                  "amount": 7
-                }
-                """;
+        CreateItemDto requestBody = new CreateItemDto("", "string", 5.2, 7);
         given()
                 .baseUri("http://localhost")
                 .port(port)
@@ -102,14 +96,13 @@ class ItemControllerTest {
                 .post("/items")
                 .then()
                 .assertThat()
-                .statusCode(HttpStatus.BAD_REQUEST.value())
-                .extract();
+                .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
     @Test
     void viewAllItems() {
-
-        given()
+        itemRepository.save(itemMapper.mapToItem(requestBody));
+        ItemDto[] result = given()
                 .baseUri("http://localhost")
                 .port(port)
                 .auth()
@@ -122,6 +115,8 @@ class ItemControllerTest {
                 .get("/items")
                 .then()
                 .assertThat()
-                .statusCode(HttpStatus.OK.value());
+                .statusCode(HttpStatus.OK.value()).
+                extract().as(ItemDto[].class);
+        Assertions.assertThat(result.length).isEqualTo(1);
     }
 }

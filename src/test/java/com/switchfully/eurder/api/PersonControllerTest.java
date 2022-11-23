@@ -1,7 +1,6 @@
 package com.switchfully.eurder.api;
 
-import com.switchfully.eurder.api.dtos.CreateCustomerDto;
-import com.switchfully.eurder.api.dtos.CustomerDto;
+import com.switchfully.eurder.api.dtos.*;
 import com.switchfully.eurder.api.mappers.UserMapper;
 import com.switchfully.eurder.domain.Item;
 import com.switchfully.eurder.domain.users.Person;
@@ -53,7 +52,9 @@ class PersonControllerTest {
 
     @Test
     void viewAllCustomers() {
-        given()
+        CreateCustomerDto createCustomerDto=new CreateCustomerDto("fname","lname","string@qd.com","string","65","3500","Hasselt","04653122246","password");
+        Person person= personRepository.save(userMapper.mapToUser(createCustomerDto));
+        CustomerDto[] customers=  given()
                 .baseUri("http://localhost")
                 .port(port)
                 .auth()
@@ -67,14 +68,16 @@ class PersonControllerTest {
                 .then()
                 .assertThat()
                 .statusCode(HttpStatus.OK.value())
-                .extract();
+                .extract()
+                .as(CustomerDto[].class);
+        Assertions.assertThat(customers.length).isEqualTo(2);
     }
 
     @Test
     void viewOneCustomer() {
         CreateCustomerDto createCustomerDto=new CreateCustomerDto("fname","lname","string@qd.com","string","65","3500","Hasselt","04653122246","password");
         Person person= personRepository.save(userMapper.mapToUser(createCustomerDto));
-        given()
+        ShowUserDto customer=given()
                 .baseUri("http://localhost")
                 .port(port)
                 .auth()
@@ -88,7 +91,9 @@ class PersonControllerTest {
                 .then()
                 .assertThat()
                 .statusCode(HttpStatus.OK.value())
-                .extract();
+                .extract()
+                .as(ShowUserDto.class);
+        Assertions.assertThat(customer.getFirstName()).isEqualTo("fname");
     }
     @Test
     void viewOneCustomer_WrongCredentialsThrowsError() {
@@ -108,7 +113,7 @@ class PersonControllerTest {
                 .then()
                 .assertThat()
                 .statusCode(HttpStatus.UNAUTHORIZED.value())
-                .extract();
+                .body("message", equalTo("Wrong credentials!"));
     }
     @Test
     void viewOneCustomer_whenByCustomer_thenThrowsException() {
@@ -128,7 +133,7 @@ class PersonControllerTest {
                 .then()
                 .assertThat()
                 .statusCode(HttpStatus.FORBIDDEN.value())
-                .extract();
+                .body("message", equalTo("You do not have the authorization for this feature"));
     }
 
     @Test
@@ -137,20 +142,9 @@ class PersonControllerTest {
         Person person= personRepository.save(userMapper.mapToUser(createCustomerDto));
         long itemId1 = (itemRepository.save(new Item("item1","desc",2.5,5))).getId();
         long itemId2 = (itemRepository.save(new Item("item2","desc",2.5,5))).getId();
-
-        String requestBody = String.format("""
-                [
-                  {
-                    "itemId": "%s",
-                    "amount": 2
-                  },
-                    {
-                    "itemId": "%s",
-                    "amount": 2
-                  }
-                ]
-                """, itemId1, itemId2);
-        given()
+        CreateItemGroupDto[] requestBody={new CreateItemGroupDto(itemId1,2),new CreateItemGroupDto(itemId2,2)};
+        ShowOrderDto result=
+                given()
                 .baseUri("http://localhost")
                 .port(port)
                 .auth()
@@ -165,26 +159,20 @@ class PersonControllerTest {
                 .then()
                 .assertThat()
                 .statusCode(HttpStatus.CREATED.value())
-                .extract();
+                .extract()
+                .as(ShowOrderDto.class);
+        Assertions.assertThat(result.getTotalPrice()).isEqualTo(10);
+        Assertions.assertThat(result.getOrders().size()).isEqualTo(2);
     }
 
     @Test
     void addOrder_whenUserDoesNotExist_ThrowsException() {
-        String aUserId = "wrongid";
+        CreateCustomerDto createCustomerDto=new CreateCustomerDto("fname","lname","customer@test.be","string","65","3500","Hasselt","04653122246","password");
+        Person person= personRepository.save(userMapper.mapToUser(createCustomerDto));
+        long aUserId = 5555;
         long itemId1 = (itemRepository.save(new Item("item1","desc",2.5,5))).getId();
         long itemId2 = (itemRepository.save(new Item("item2","desc",2.5,5))).getId();
-        String requestBody = String.format("""
-                [
-                  {
-                    "itemId": "%s",
-                    "amount": 2
-                  },
-                    {
-                    "itemId": "%s",
-                    "amount": 2
-                  }
-                ]
-                """, itemId1, itemId2);
+        CreateItemGroupDto[] requestBody={new CreateItemGroupDto(itemId1,2),new CreateItemGroupDto(itemId2,2)};
         given()
                 .baseUri("http://localhost")
                 .port(port)
@@ -199,7 +187,8 @@ class PersonControllerTest {
                 .post("/customers/" + aUserId + "/order")
                 .then()
                 .assertThat()
-                .statusCode(HttpStatus.BAD_REQUEST.value());
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body("message", equalTo("There is no customer with the id 5555."));
 
     }
 
@@ -209,18 +198,7 @@ class PersonControllerTest {
         Person person= personRepository.save(userMapper.mapToUser(createCustomerDto));
         long itemId1 = 9999;
         long itemId2 = (itemRepository.save(new Item("item2","desc",2.5,5))).getId();
-        String requestBody = String.format("""
-                [
-                  {
-                    "itemId": "%s",
-                    "amount": 2
-                  },
-                    {
-                    "itemId": "%s",
-                    "amount": 2
-                  }
-                ]
-                """, itemId1, itemId2);
+        CreateItemGroupDto[] requestBody={new CreateItemGroupDto(itemId1,2),new CreateItemGroupDto(itemId2,2)};
         given()
                 .baseUri("http://localhost")
                 .port(port)
@@ -236,7 +214,7 @@ class PersonControllerTest {
                 .then()
                 .assertThat()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
-                .extract();
+                .body("message", equalTo("Item with the id 9999 does not exist."));
     }
 
     @Test
